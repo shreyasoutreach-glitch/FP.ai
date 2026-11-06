@@ -1,5 +1,4 @@
-import { Scale, AlertTriangle, CheckCircle, ArrowRight } from 'lucide-react'
-import clsx from 'clsx'
+import { BarChart3, Info } from 'lucide-react'
 
 interface Props {
   imbalanceScore: number
@@ -7,95 +6,64 @@ interface Props {
 }
 
 export default function PowerImbalanceVisualizer({ imbalanceScore, contractType }: Props) {
-  // Score 0-100 where >60 is severe counterparty favor, 40-60 is balanced, <40 is signer favor
-  const isSevere = imbalanceScore >= 70
-  const isModerate = imbalanceScore >= 45 && imbalanceScore < 70
-  const isBalanced = imbalanceScore < 45
-
-  const counterpartyPercent = Math.min(Math.max(imbalanceScore, 10), 95)
-  const signerPercent = 100 - counterpartyPercent
-
-  const getStatusLabel = () => {
-    if (imbalanceScore >= 80) return 'Extreme Counterparty Favor'
-    if (imbalanceScore >= 65) return 'Substantial One-Sided Asymmetry'
-    if (imbalanceScore >= 45) return 'Moderate Commercial Advantage'
-    return 'Balanced Reciprocal Covenants'
-  }
-
-  const getStatusColor = () => {
-    if (isSevere) return 'text-red-400 border-red-800/60 bg-red-950/30'
-    if (isModerate) return 'text-orange-400 border-orange-800/60 bg-orange-950/30'
-    return 'text-green-400 border-green-800/60 bg-green-950/30'
-  }
+  const score = Math.max(0, Math.min(100, Math.round(imbalanceScore)))
+  const label =
+    score >= 80 ? 'Very high flagged-clause pressure' :
+    score >= 60 ? 'Elevated flagged-clause pressure' :
+    score >= 40 ? 'Moderate flagged-clause pressure' :
+    'Lower flagged-clause pressure'
 
   return (
-    <div className="card h-full flex flex-col justify-between space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="card flex h-full flex-col justify-between space-y-4">
+      <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Scale className="w-4 h-4 text-fp-accent" />
-          <h3 className="font-semibold text-sm text-fp-text">Power Imbalance Index</h3>
+          <BarChart3 className="h-4 w-4 text-fp-accent" />
+          <h3 className="text-sm font-semibold text-fp-text">Flagged-Clause Pressure</h3>
         </div>
-        <span className={clsx('text-[11px] font-bold px-2.5 py-0.5 rounded-full border', getStatusColor())}>
-          {getStatusLabel()}
+        <span className="rounded-full border border-fp-border bg-fp-surface px-2.5 py-0.5 text-[10px] font-medium text-fp-muted">
+          Heuristic index
         </span>
       </div>
 
-      {/* Visual meter */}
       <div className="space-y-2">
-        <div className="flex justify-between text-xs font-mono">
-          <span className="text-fp-muted">Your Position ({signerPercent}%)</span>
-          <span className="text-red-400 font-bold">Counterparty Advantage ({counterpartyPercent}%)</span>
+        <div className="flex items-end justify-between gap-3">
+          <p className="text-xs text-fp-muted">{label}</p>
+          <p className="text-2xl font-semibold tabular-nums text-fp-text">{score}<span className="text-sm text-fp-muted"> / 100</span></p>
         </div>
-
-        <div className="h-3 w-full bg-fp-surface rounded-full overflow-hidden flex p-0.5 border border-fp-border">
+        <div
+          className="h-2.5 w-full overflow-hidden rounded-full border border-fp-border bg-fp-surface"
+          role="progressbar"
+          aria-label="Flagged-clause pressure index"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={score}
+        >
           <div
-            className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-l-full transition-all duration-700"
-            style={{ width: `${signerPercent}%` }}
-          />
-          <div
-            className="h-full bg-gradient-to-r from-orange-500 to-red-600 rounded-r-full transition-all duration-700 shadow-[0_0_12px_rgba(220,38,38,0.5)]"
-            style={{ width: `${counterpartyPercent}%` }}
+            className="h-full rounded-full bg-fp-accent transition-all duration-500"
+            style={{ width: `${score}%` }}
           />
         </div>
-
-        <div className="flex justify-between text-[10px] text-fp-muted font-mono pt-0.5">
-          <span>0 (Signer Dictated)</span>
-          <span>50 (Reciprocal Equilibrium)</span>
-          <span>100 (Unilateral Draft)</span>
+        <div className="flex justify-between text-[10px] text-fp-muted">
+          <span>Lower signal</span>
+          <span>Higher signal</span>
         </div>
       </div>
 
-      {/* Asymmetric vectors */}
-      <div className="space-y-2 pt-2 border-t border-fp-border/50 text-xs">
-        <div className="flex items-center justify-between text-fp-muted">
-          <span>Exit Rights Reciprocity:</span>
-          <span className={isSevere ? 'text-red-400 font-medium' : 'text-fp-text'}>
-            {isSevere ? 'Asymmetric (30:1)' : 'Standard'}
-          </span>
+      <div className="space-y-2 border-t border-fp-border/60 pt-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-fp-muted">What contributes to this index</p>
+        <div className="flex items-start gap-2 text-xs text-fp-muted">
+          <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-fp-accent" />
+          <span>Counts of clauses classified as critical or high risk.</span>
         </div>
-        <div className="flex items-center justify-between text-fp-muted">
-          <span>Indemnification Ceiling:</span>
-          <span className={imbalanceScore > 60 ? 'text-red-400 font-medium' : 'text-fp-text'}>
-            {imbalanceScore > 60 ? 'Uncapped vs Nominal' : 'Mutual Cap'}
-          </span>
-        </div>
-        <div className="flex items-center justify-between text-fp-muted">
-          <span>Dispute Resolution Forum:</span>
-          <span className="text-fp-text">Foreign / Off-shore AAA</span>
+        <div className="flex items-start gap-2 text-xs text-fp-muted">
+          <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-fp-accent" />
+          <span>Number of matched red-flag phrases across the {contractType.toLowerCase()}.</span>
         </div>
       </div>
 
-      <div className="text-[11px] text-fp-muted bg-fp-surface/60 rounded-lg p-2.5 border border-fp-border/40 leading-relaxed flex items-start gap-2">
-        {isSevere ? (
-          <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
-        ) : (
-          <CheckCircle className="w-3.5 h-3.5 text-green-400 shrink-0 mt-0.5" />
-        )}
-        <span>
-          {isSevere
-            ? `This ${contractType} is heavily weighted against you. Key obligations are one-directional without mutual remedies.`
-            : `Clauses maintain standard commercial balance between both signing parties.`}
-        </span>
+      <div className="flex items-start gap-2 rounded-lg border border-fp-border/50 bg-fp-surface/60 p-3 text-[11px] leading-relaxed text-fp-muted">
+        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-fp-accent" />
+        <span>This is a screening proxy. It does not measure bargaining power, prove contractual asymmetry, or establish legal harm.</span>
       </div>
     </div>
   )
