@@ -10,11 +10,9 @@ Combines:
   - Heuristic Risk Scoring & Power Imbalance Aggregation
   - UMAP / PCA 2D Dimensionality Reduction for Visual Analytics
 """
-import os
 import re
 import json
 import math
-import pickle
 import logging
 import asyncio
 from typing import List, Dict, Any, Optional, Tuple
@@ -50,7 +48,8 @@ class ClauseAnalysis:
     is_anomaly: bool
     readability_score: float   # Flesch Reading Ease (0–100, higher = easier)
     flags: List[str]           # specific red-flag phrases found
-    confidence: float          # ML confidence 0–1
+    match_strength: float      # Heuristic phrase-match strength; not a probability
+    risk_score_breakdown: Dict[str, float] = field(default_factory=dict)
     # Extended metrics
     fk_grade_level: float = 0.0     # Flesch-Kincaid Grade Level
     coleman_liau_index: float = 0.0 # Coleman-Liau readability index
@@ -100,14 +99,11 @@ class FPMLEngine:
 
     def __init__(self):
         self.embedding_model = None
-        self.isolation_forest = None
         self.umap_reducer = None
         self.clusterer = None
         self.cluster_topics: Dict[int, Dict[str, Any]] = {}
         self.embeddings_cache: Dict[str, np.ndarray] = {}
         self.is_loaded = False
-        self._model_dir = settings.ML_MODEL_DIR
-        os.makedirs(self._model_dir, exist_ok=True)
 
     async def load(self):
         """Load ML models (async wrapper around sync loading)."""
@@ -117,26 +113,18 @@ class FPMLEngine:
         logger.info("ML Engine fully loaded and operational")
 
     def _load_sync(self):
-        """Synchronous model loading."""
+        """Load optional sentence embeddings; the portable TF-IDF fallback is always available."""
         try:
             from sentence_transformers import SentenceTransformer
             logger.info(f"Attempting to load sentence transformer: {settings.EMBEDDING_MODEL}")
             self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL)
             logger.info("SentenceTransformer loaded successfully.")
         except Exception as e:
-            logger.info(f"SentenceTransformer not available ({e}). Using optimized hybrid vectorizer fallback.")
+            logger.info(
+                "SentenceTransformer unavailable (%s); using word and character TF-IDF features.",
+                e,
+            )
             self.embedding_model = None
-
-        # Load pre-trained anomaly model if exists
-        model_path = os.path.join(self._model_dir, "isolation_forest.pkl")
-        if os.path.exists(model_path):
-            try:
-                with open(model_path, "rb") as f:
-                    self.isolation_forest = pickle.load(f)
-                logger.info("Loaded persisted IsolationForest model")
-            except Exception as e:
-                logger.warning(f"Could not load persisted model: {e}")
-                self.isolation_forest = None
 
     # ──────────────────────────────────────────────────────────────────────────
     # VECTORIZATION PIPELINE
@@ -282,7 +270,7 @@ class FPMLEngine:
     def _pattern_match(self, text: str) -> Tuple[Optional[ClausePattern], List[str], float]:
         """
         Match text against the rich statutory and historical knowledge base.
-        Returns (best_pattern, matched_red_flags, match_confidence).
+        Returns (best_pattern, matched_red_flags, heuristic_match_strength).
         """
         text_lower = text.lower()
         best_pattern = None
@@ -316,8 +304,8 @@ class FPMLEngine:
                     best_pattern = pattern
 
         unique_flags = list(dict.fromkeys(all_matched_flags))
-        confidence = min(1.0, round(best_score / 3.0, 2)) if best_pattern else 0.0
-        return best_pattern, unique_flags, confidence
+        match_strength = min(1.0, round(best_score / 3.0, 2)) if best_pattern else 0.0
+        return best_pattern, unique_flags, match_strength
 
     def _heuristic_classify(
         self, text: str, is_anomaly: bool, readability: float, fk_grade: float
@@ -385,6 +373,40 @@ class FPMLEngine:
     # RISK SCORING & AGGREGATION
     # ──────────────────────────────────────────────────────────────────────────
 
+    def _calculate_clause_risk_breakdown(
+        self,
+        risk_level: RiskLevel,
+        anomaly_score: float,
+        readability: float,
+        fk_grade: float,
+        flag_count: int,
+    ) -> Dict[str, float]:
+        """Return the transparent heuristic components behind the 0–100 triage score."""
+        base_scores = {
+            RiskLevel.CRITICAL: 85.0,
+            RiskLevel.HIGH: 65.0,
+            RiskLevel.MEDIUM: 40.0,
+            RiskLevel.LOW: 20.0,
+            RiskLevel.INFO: 5.0,
+        }
+        base_score = base_scores.get(risk_level, 30.0)
+        # Isolation Forest scores are relative to clauses in this document, not legal-risk probabilities.
+        anomaly_boost = min(15.0, abs(anomaly_score) * 20.0) if anomaly_score < 0 else 0.0
+        readability_penalty = 0.0
+        if readability < 40.0:
+            readability_penalty += ((40.0 - readability) / 40.0) * 6.0
+        if fk_grade > 15.0:
+            readability_penalty += min(6.0, (fk_grade - 15.0) * 1.2)
+        red_flag_boost = min(12.0, max(0, flag_count) * 2.5)
+        total = min(100.0, max(0.0, base_score + anomaly_boost + readability_penalty + red_flag_boost))
+        return {
+            "base_score": round(base_score, 2),
+            "anomaly_boost": round(anomaly_boost, 2),
+            "readability_penalty": round(readability_penalty, 2),
+            "red_flag_boost": round(red_flag_boost, 2),
+            "total": round(total, 2),
+        }
+
     def _calculate_clause_risk_score(
         self,
         risk_level: RiskLevel,
@@ -393,39 +415,10 @@ class FPMLEngine:
         fk_grade: float,
         flag_count: int,
     ) -> float:
-        """
-        Compute an intelligent composite risk score (0 to 100) combining:
-        - Base risk level (CRITICAL = 85, HIGH = 65, MEDIUM = 40, LOW = 20, INFO = 5)
-        - Anomaly boost: +0 to +15 based on isolation forest anomaly severity
-        - Linguistic obscurity penalty: +0 to +10 based on Flesch Reading Ease and FK Grade
-        - Red-flag density: +2.5 per detected red-flag phrase (up to +12)
-        """
-        base_scores = {
-            RiskLevel.CRITICAL: 85.0,
-            RiskLevel.HIGH: 65.0,
-            RiskLevel.MEDIUM: 40.0,
-            RiskLevel.LOW: 20.0,
-            RiskLevel.INFO: 5.0,
-        }
-        score = base_scores.get(risk_level, 30.0)
-
-        # Anomaly boost: anomaly_score is between -1 (very anomalous) and +1 (normal)
-        if anomaly_score < 0:
-            anomaly_boost = min(15.0, abs(anomaly_score) * 20.0)
-            score += anomaly_boost
-
-        # Linguistic obscurity penalty: low reading ease (< 40) or high FK grade (> 16)
-        readability_penalty = 0.0
-        if readability < 40.0:
-            readability_penalty += ((40.0 - readability) / 40.0) * 6.0
-        if fk_grade > 15.0:
-            readability_penalty += min(6.0, (fk_grade - 15.0) * 1.2)
-        score += readability_penalty
-
-        # Flag density boost
-        score += min(12.0, flag_count * 2.5)
-
-        return min(100.0, max(0.0, score))
+        """Compatibility wrapper returning only the total heuristic score."""
+        return self._calculate_clause_risk_breakdown(
+            risk_level, anomaly_score, readability, fk_grade, flag_count
+        )["total"]
 
     def _risk_score_from_level(
         self,
@@ -610,24 +603,6 @@ class FPMLEngine:
             logger.warning(f"Anomaly detection fallback: {e}")
             return np.zeros(n_samples)
 
-    def _update_model(self, embeddings: np.ndarray):
-        """Persist online trained anomaly detection model."""
-        if len(embeddings) < 10:
-            return
-        try:
-            from sklearn.ensemble import IsolationForest
-            self.isolation_forest = IsolationForest(
-                contamination=settings.ANOMALY_CONTAMINATION,
-                random_state=42,
-                n_estimators=150,
-            )
-            self.isolation_forest.fit(embeddings)
-            model_path = os.path.join(self._model_dir, "isolation_forest.pkl")
-            with open(model_path, "wb") as f:
-                pickle.dump(self.isolation_forest, f)
-        except Exception as e:
-            logger.warning(f"Model update failed: {e}")
-
     # ──────────────────────────────────────────────────────────────────────────
     # MAIN ANALYSIS PIPELINE
     # ──────────────────────────────────────────────────────────────────────────
@@ -666,7 +641,7 @@ class FPMLEngine:
         for idx, (clause_text, emb, cluster_id, anom_score) in enumerate(
             zip(clauses, embeddings, cluster_ids, anomaly_scores)
         ):
-            pattern, flags, confidence = self._pattern_match(clause_text)
+            pattern, flags, match_strength = self._pattern_match(clause_text)
             fre, fk_grade, cli = self._compute_readability(clause_text)
 
             # Anomaly threshold: score < -0.05 or lower quartile
@@ -680,7 +655,7 @@ class FPMLEngine:
                 legal_basis = pattern.legal_basis
                 matched_name = pattern.name
                 # Boost confidence when multiple red-flag phrases match
-                confidence = max(confidence, min(1.0, 0.6 + len(flags) * 0.1))
+                match_strength = max(match_strength, min(1.0, 0.6 + len(flags) * 0.1))
             else:
                 risk_level, category = self._heuristic_classify(clause_text, is_anomaly, fre, fk_grade)
                 plain_english = self._generate_plain_english_heuristic(clause_text, risk_level, category)
@@ -690,16 +665,17 @@ class FPMLEngine:
                 )
                 legal_basis = "General contract law principles (Indian Contract Act 1872)"
                 matched_name = None
-                confidence = 0.55 if risk_level in (RiskLevel.HIGH, RiskLevel.CRITICAL) else 0.40
+                match_strength = 0.0
 
             # Calculate composite risk score (0-100)
-            risk_score = self._calculate_clause_risk_score(
+            risk_score_breakdown = self._calculate_clause_risk_breakdown(
                 risk_level=risk_level,
                 anomaly_score=float(anom_score),
                 readability=fre,
                 fk_grade=fk_grade,
                 flag_count=len(flags),
             )
+            risk_score = risk_score_breakdown["total"]
 
             end_char = char_offset + len(clause_text)
             cluster_topic_str = cluster_topics_map.get(int(cluster_id), {}).get("topic_name", "General Provisions")
@@ -720,15 +696,13 @@ class FPMLEngine:
                 is_anomaly=is_anomaly,
                 readability_score=round(fre, 1),
                 flags=flags,
-                confidence=round(confidence, 2),
+                match_strength=round(match_strength, 2),
+                risk_score_breakdown=risk_score_breakdown,
                 fk_grade_level=round(fk_grade, 1),
                 coleman_liau_index=round(cli, 1),
                 cluster_topic=cluster_topic_str,
             ))
             char_offset = end_char + 2
-
-        # Online model update
-        self._update_model(embeddings)
 
         return results
 
