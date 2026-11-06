@@ -129,7 +129,7 @@ export default function ContractClauseViewer({
                     : 'text-fp-muted/80 hover:text-fp-text hover:bg-fp-surface/30',
                   clauseData && riskBorderColors[clauseData.risk_level],
                   isCurrentlySelected &&
-                    'ring-2 ring-fp-accent bg-fp-accent/15 scale-[1.01] shadow-[0_0_25px_rgba(37,99,235,0.25)]'
+                    'ring-2 ring-fp-accent bg-fp-accent/15 scale-[1.01] shadow-[0_0_18px_rgba(154,185,154,0.18)]'
                 )}
               >
                 {clauseData && (
@@ -198,10 +198,34 @@ export default function ContractClauseViewer({
               </div>
             )}
 
+            {activeClause.matched_pattern && activeClause.match_strength !== undefined && (
+              <p className="text-[10px] text-fp-muted">
+                Rule-pattern match strength: <strong className="text-fp-text">{activeClause.match_strength.toFixed(2)} / 1.00</strong>
+                <span> · heuristic, not a probability</span>
+              </p>
+            )}
+
+            {activeClause.risk_score_breakdown && (
+              <div className="rounded-xl border border-fp-border bg-fp-surface/70 p-3">
+                <span className="mb-2 block text-[10px] font-semibold uppercase tracking-wider text-fp-muted">
+                  Heuristic score components
+                </span>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[11px] text-fp-muted">
+                  <span>Base severity</span><strong className="text-fp-text">{activeClause.risk_score_breakdown.base_score.toFixed(1)}</strong>
+                  <span>Document anomaly adjustment</span><strong className="text-fp-text">+{activeClause.risk_score_breakdown.anomaly_boost.toFixed(1)}</strong>
+                  <span>Readability adjustment</span><strong className="text-fp-text">+{activeClause.risk_score_breakdown.readability_penalty.toFixed(1)}</strong>
+                  <span>Matched phrase adjustment</span><strong className="text-fp-text">+{activeClause.risk_score_breakdown.red_flag_boost.toFixed(1)}</strong>
+                </div>
+                <p className="mt-2 border-t border-fp-border pt-2 text-[10px] leading-relaxed text-fp-muted">
+                  This 0–100 index is a rule-based triage heuristic, not a probability of legal harm. Anomaly adjustment is relative to clauses in this document.
+                </p>
+              </div>
+            )}
+
             {/* Plain English Translation */}
-            <div className="bg-blue-950/20 border border-blue-900/40 rounded-xl p-3.5 space-y-1">
-              <span className="text-[10px] uppercase font-mono tracking-wider text-blue-300 font-bold block flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-yellow-300" /> What It Actually Means For You
+            <div className="bg-fp-accent/10 border border-fp-accent/25 rounded-xl p-3.5 space-y-1">
+              <span className="text-[10px] uppercase font-mono tracking-wider text-fp-accent font-bold block flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-yellow-300" /> Plain-English interpretation · automated
               </span>
               <p className="text-xs text-fp-text leading-relaxed font-sans">{activeClause.plain_english}</p>
             </div>
@@ -219,9 +243,10 @@ export default function ContractClauseViewer({
               <Scale className="w-4 h-4 text-fp-accent shrink-0 mt-0.5" />
               <div>
                 <span className="text-[10px] uppercase font-mono tracking-wider text-fp-muted block mb-0.5">
-                  Statutory Reference & Case Law
+                  Potentially relevant legal reference
                 </span>
                 <p className="text-xs text-fp-muted leading-relaxed">{activeClause.legal_basis}</p>
+                <p className="mt-1 text-[10px] text-fp-muted">Reference suggestions require jurisdiction-specific legal review.</p>
               </div>
             </div>
 
@@ -248,7 +273,7 @@ export default function ContractClauseViewer({
           {/* Quick Copy Action */}
           <div className="pt-3 border-t border-fp-border/50 flex items-center justify-between">
             <span className="text-[10px] text-fp-muted font-mono">
-              Anomaly Score: <strong>{activeClause.anomaly_score?.toFixed(2) || '0.75'}</strong>
+              Document-relative anomaly: <strong>{activeClause.anomaly_score?.toFixed(2) ?? 'Not available'}</strong>
             </span>
             <button
               onClick={() => copyClauseText(activeClause.text)}
