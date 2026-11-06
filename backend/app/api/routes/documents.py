@@ -66,9 +66,9 @@ async def upload_document(
 
     if ext == ".pdf" and not content.startswith(b"%PDF-"):
         raise HTTPException(415, "The file extension is PDF but its contents are not a PDF document.")
-    if ext == ".docx" and not content.startswith(b"PK\\x03\\x04"):
+    if ext == ".docx" and not content.startswith(b"PK\x03\x04"):
         raise HTTPException(415, "The file extension is DOCX but its contents are not a DOCX archive.")
-    if ext == ".txt" and b"\\x00" in content:
+    if ext == ".txt" and b"\x00" in content:
         raise HTTPException(415, "The TXT file contains binary data and cannot be accepted as plain text.")
 
     # Extract before saving so corrupt, encrypted or image-only PDFs are not retained as usable uploads.
