@@ -1,0 +1,36 @@
+SHARE PURCHASE AND MERGER AGREEMENT
+
+This SHARE PURCHASE AND MERGER AGREEMENT (this "Agreement") is dated as of October 15, 2024, by and between APEX GLOBAL HOLDINGS LIMITED, a corporation organized under the laws of Mauritius ("Purchaser"), and NEXUS ENTERPRISE TECHNOLOGIES PRIVATE LIMITED, a company incorporated under the Indian Companies Act, 2013 ("Company" or "Target"), together with the Founding Shareholders named on Schedule I hereto ("Sellers").
+
+RECITALS
+WHEREAS, the Purchaser desires to acquire all issued and outstanding share capital of the Company for an aggregate deal consideration of INR 2,450 Crores;
+WHEREAS, the parties desire to consummate the acquisition subject to the terms and covenants contained herein;
+
+NOW, THEREFORE, the parties agree as follows:
+
+ARTICLE 1: DEFINITIONS AND PURCHASE PRICE
+1.1 Purchase Price. The aggregate enterprise valuation shall be Rupees Two Thousand Four Hundred and Fifty Crores (INR 2,450 Crores), payable at Closing subject to post-closing working capital deductions.
+1.2 Closing Date. Closing shall occur within seven (7) business days following the execution of this Agreement.
+
+ARTICLE 2: ANTITRUST REGULATORY CLEARANCE & DEAL VALUE THRESHOLD
+2.1 Deal Value Threshold & Gun-Jumping. The parties acknowledge that the aggregate transaction value exceeds the Deal Value Threshold (DVT) of Rs. 2,000 Crore under Section 5 of the Competition Act 2002. Notwithstanding that the Target maintains Substantial Business Operations in India, the parties agree that Closing shall not be conditioned upon prior approval from the Competition Commission of India (CCI). The parties agree to waive any statutory waiting period under CCI regulations, and Purchaser shall bear sole responsibility for any gun-jumping penalty under Section 43A of the Competition Act.
+
+ARTICLE 3: CHANGE OF CONTROL AND SEBI SAST OPEN OFFER COVENANTS
+3.1 Immediate Termination on Change of Control. Upon any change of control, merger, or reorganization of either party, the other party shall have the unilateral right to terminate all commercial service contracts, software licenses, and channel partnership agreements with immediate effect without penalty or compensation.
+3.2 Call Option & SAST Takeover Trigger. The Purchaser is hereby granted an irrevocable call option and drag-along right to acquire an additional 15% voting equity from existing shareholders, which together with its initial 15% shareholding shall confer the unilateral right to appoint a majority of the Board of Directors. The parties recognize that this acquisition of control and crossing of the 25% voting threshold shall trigger a mandatory open offer under Regulation 3 and Regulation 4 of SEBI SAST Regulations 2011 to acquire an additional 26% of public shares.
+
+ARTICLE 4: RELATED PARTY TRANSACTIONS AND GOVERNANCE
+4.1 Undisclosed Related Party Asset Transfer. Within thirty (30) days following Closing, the Target Company shall acquire the proprietary hardware intellectual property of Orion Micro Systems, an entity in which the Target's Managing Director and his immediate family hold a 55% controlling equity interest, for a cash consideration of INR 75 Crores. The parties expressly waive any requirement for prior Audit Committee review, Board resolution, or special shareholder resolution under Section 188 of the Companies Act 2013.
+
+ARTICLE 5: SPECIAL PURPOSE VEHICLE & OFF-BALANCE SHEET INDEMNITY
+5.1 Enron-Style SPE Shadow Guarantee. The Sellers covenant to fully defend, indemnify, and hold harmless the Purchaser and its affiliated Special Purpose Entity (SPE) financing vehicles from and against any and all synthetic lease liabilities, off-balance sheet loan defaults, deficiency guarantees, and credit facilities incurred by the project entities. Such SPE indemnity obligations shall remain off-balance sheet and shall not be disclosed in the Target's statutory financial statements or annual returns.
+
+ARTICLE 6: INDEMNIFICATION AND LIABILITIES
+6.1 Uncapped Unlimited Indemnity. The Sellers jointly and severally agree to indemnify and hold harmless the Purchaser, its affiliates, directors, officers, and successors against any and all claims, losses, damages, liabilities, and expenses (including full consequential damages, loss of future profits, and attorney's fees) arising out of or related to any breach of representation, environmental liabilities, or pre-closing tax assessments. Sellers' indemnity liability shall be uncapped, without any de minimis basket or limitation of liability ceiling, and shall survive in perpetuity.
+
+ARTICLE 7: POST-CLOSING NON-COMPETE AND RESTRAINT OF TRADE
+7.1 Founder Global Non-Compete Lock-In. For a period of five (5) years following the Closing Date, each Founding Shareholder covenants that they shall not, directly or indirectly, anywhere in the world, establish, invest in, advise, or join any software enterprise, technology startup, or consulting firm that operates in any business vertical currently engaged in or prospectively contemplated by the Purchaser.
+
+ARTICLE 8: GOVERNING LAW AND DISPUTE RESOLUTION
+8.1 Governing Law. This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, United States.
+8.2 Jurisdiction. The parties irrevocably submit to the exclusive jurisdiction of the Court of Chancery of the State of Delaware, USA, and waive any objection regarding inconvenient forum.

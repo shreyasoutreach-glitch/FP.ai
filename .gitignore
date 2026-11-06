@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+*.env
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+fpai.db
+
+# ML models (large files)
+ml_models/
+*.pkl
+*.joblib
+
+# Uploads
+uploads/
+
+# Node
+node_modules/
+.pnpm-store/
+frontend/dist/
+frontend/.vite/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+logs/
+.pytest_cache/
+test_fpai.db*
+
+# Env
+.env
+.env.local
+.env.production

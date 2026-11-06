@@ -1,0 +1,27 @@
+EXECUTIVE EMPLOYMENT AND RETENTION AGREEMENT
+
+This EXECUTIVE EMPLOYMENT AGREEMENT (this "Agreement") is entered into as of January 10, 2024, by and between CLOUDSCALE SOLUTIONS PRIVATE LIMITED, a company registered under the Companies Act 2013 ("Company" or "Employer"), and ARJUN SHARMA ("Executive" or "Employee").
+
+1. APPOINTMENT AND SCOPE OF DUTIES
+The Company agrees to employ the Executive in the capacity of Vice President of Engineering. Executive shall devote full business time and energy exclusively to the business of the Company.
+
+2. SERVICE BOND AND TRAINING COST RECOVERY (SECTION 74 ICA)
+The Executive agrees to serve a mandatory minimum service bond period of twenty-four (24) months from the Commencement Date. In the event the Executive resigns or ceases employment prior to the expiration of said 24 months, the Executive shall immediately pay the Company Rupees 5,00,000 as liquidated damages for training cost recovery and onboarding expenses. The Executive expressly authorizes the Company to forfeit security deposits, withhold accrued wages, and withhold experience letters until full payment of the bond amount of Rs. 5,00,000 is received.
+
+3. POST-TERMINATION NON-COMPETE AND COMPETITOR RESTRAINT (SECTION 27 ICA)
+Upon cessation of employment for any reason, the Executive shall not, for a period of 6 months following cessation, directly or indirectly accept employment with or provide consulting services to named competitors including TCS, Infosys, Wipro, Cognizant, HCL, or Accenture to service any same client or customer serviced by the Executive during the preceding 12 months. Any breach of this restraint on future employment shall entitle the Company to immediate injunctive relief.
+
+4. COMPREHENSIVE IP ASSIGNMENT AND MOONLIGHTING GRAB
+All inventions, software code, algorithms, systems, designs, and proprietary ideas conceived or developed by the Executive during the term of employment—whether or not using Company resources, and including personal time, weekends, and personal computing devices, whether or not related to Company business—shall be considered works made for hire and the sole and exclusive property of the Company. The Executive irrevocably assigns all right, title, and interest in perpetuity worldwide.
+
+5. DISCRETIONARY BONUS AND PHANTOM EQUITY CLAWBACK
+Any annual bonus, performance incentive, or stock appreciation rights (SARs) awarded to the Executive shall be at the management discretion of the Company and is not a contractual entitlement. In the event the Executive departs within thirty-six (36) months, all vested phantom equity units shall be cancelled, and previously paid retention bonus installments shall be subject to immediate phantom equity clawback and cash reimbursement within fifteen (15) days of departure.
+
+6. PERPETUAL NON-DISPARAGEMENT GAG CLAUSE & POSH RESTRICTION
+The Executive agrees to keep all workplace matters strictly confidential in perpetuity and covenants never at any time to criticize, disparage, or make adverse statements regarding the Company or its directors. The Executive expressly waives any right to file workplace complaints or disclose allegations under the POSH Act 2013 (Sexual Harassment of Women at Workplace Act) or approach external grievance tribunals.
+
+7. TERMINATION AND NOTICE ASYMMETRY
+The Company reserves the right to terminate this Agreement immediately for convenience at any time without cause and without payment of severance upon 7 days written notice. Conversely, the Executive must provide not less than one hundred and eighty (180) days written notice with no right to buy out the notice period.
+
+8. GOVERNING LAW AND MANDATORY BINDING ARBITRATION
+Any dispute arising out of or in connection with this Agreement shall be finally resolved by mandatory binding arbitration administered in Singapore under SIAC Rules. The parties waive any right to bring representative proceedings or appeal to national courts.

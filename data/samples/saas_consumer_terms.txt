@@ -1,0 +1,26 @@
+STREAMFLOW CLOUD PLATFORM & ENTERPRISE CONSUMER TERMS OF SERVICE
+
+Last Revised: November 2024
+
+PLEASE READ THESE TERMS OF SERVICE CAREFULLY. BY CREATING AN ACCOUNT, ACCESSING THE PLATFORM, OR SIGNING UP FOR A FREE TRIAL, YOU AGREE TO BE BOUND BY ALL PROVISIONS HEREIN.
+
+1. ACCEPTANCE AND UNILATERAL MODIFICATION OF TERMS
+StreamFlow Inc. ("Company") reserves the right to modify these terms and conditions, subscription tiers, and monthly recurring pricing at any time at our sole discretion without prior notice. Continued use of the service constitutes acceptance of all modified terms. We may alter or discontinue features without notice and without refund of prepaid fees.
+
+2. NEGATIVE OPTION BILLING AND ZOMBIE AUTO-RENEWAL
+Your free trial will automatically enroll in negative option billing upon expiration and convert to a continuous renewal subscription, charged automatically to your payment method every month. To cancel the zombie subscription, the user must send a certified physical letter via registered postal mail postmarked at least 45 days prior to the billing cycle; in-app cancellation and digital cancellations are unavailable. All subscription fees are strictly non-refundable under any circumstance.
+
+3. CROSS-SERVICE FORCED ARBITRATION (DISNEY+ PICCOLO DOCTRINE)
+By creating an account or subscribing to this service, you agree that any dispute or claim arising out of or related to this agreement, or any past, present, or future dispute against StreamFlow, its parent corporation, or any affiliate or subsidiary—including claims for bodily injury and wrongful death arising at any physical premises, corporate venue, amusement park, or retail partner—shall be resolved solely through individual binding arbitration. You irrevocably waive the right to a jury trial on behalf of yourself, your estate, heirs, and administrators across all services and premises.
+
+4. FORCED CLASS ACTION WAIVER AND COLLECTIVE REDRESS BAN
+All claims must be brought strictly in your individual capacity and not as a plaintiff or class member in any purported class action waiver, collective, or representative proceeding. The arbitrator shall have no authority to consolidate claims of multiple consumers or conduct class arbitration.
+
+5. DATA COMMERCIALIZATION AND DPDP ACT LIABILITY TRANSFER
+You grant the Company an irrevocable, perpetual, sublicensable, worldwide license to aggregate, anonymize, and sell or transfer customer data and telemetry to third-party commercial partners. Furthermore, under the DPDP Act 2023, the Customer agrees to defend, indemnify, and hold harmless the Company against any statutory penalties, fines up to Rs. 250 Crore, or enforcement orders issued by the Data Protection Board of India resulting from data breaches or cross-border data transfer.
+
+6. ONE-SIDED LIMITATION OF LIABILITY
+In no event will the Company, its directors, or affiliates be liable for any indirect, special, incidental, punitive, or consequential damages (including lost profits or business interruption). The maximum aggregate liability of the Company under this agreement shall be limited to $10 or the amounts paid by you in the preceding month.
+
+7. GOVERNING LAW AND EXCLUSIVE VENUE
+These Terms shall be governed by the laws of the State of Delaware, USA, and disputes shall submit to the exclusive jurisdiction of the Delaware courts, waiving any claim of forum non conveniens.

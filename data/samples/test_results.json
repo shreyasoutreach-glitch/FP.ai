@@ -1,0 +1,833 @@
+{
+  "ma_acquisition_agreement.txt": {
+    "document_name": "M&A Share Purchase & Acquisition Agreement",
+    "contract_type": "M&A Agreement",
+    "total_clauses": 12,
+    "critical_count": 7,
+    "high_count": 2,
+    "medium_count": 1,
+    "low_count": 2,
+    "overall_risk_score": 86.6,
+    "overall_risk_rating": "critical",
+    "readability_score": 24.3,
+    "fk_grade_level": 14.9,
+    "power_imbalance_score": 98,
+    "top_risks": [
+      "Competition Act Deal Value Threshold (DVT \u20b92000 Cr) Gun-Jumping Trap (CRITICAL)",
+      "Hidden Change-of-Control Trigger (M&A Deal Breaker) (CRITICAL)",
+      "SEBI SAST Mandatory Open Offer Trigger (Takeover Threshold Trap) (CRITICAL)",
+      "Undisclosed Related Party Transaction & Section 188 Compliance Trap (CRITICAL)",
+      "Off-Balance Sheet SPE / Shadow Guarantee Indemnity (Enron SPE Trap) (CRITICAL)"
+    ],
+    "cluster_topics": [
+      {
+        "cluster_id": 0,
+        "topic_name": "Dispute Resolution & Arbitration",
+        "keywords": [
+          "state delaware",
+          "state",
+          "jurisdiction",
+          "delaware",
+          "exclusive",
+          "delaware usa"
+        ],
+        "clause_count": 2
+      },
+      {
+        "cluster_id": 1,
+        "topic_name": "Corporate Governance & M&A Controls",
+        "keywords": [
+          "company",
+          "share",
+          "target",
+          "parties",
+          "purchase",
+          "agreement"
+        ],
+        "clause_count": 2
+      },
+      {
+        "cluster_id": 2,
+        "topic_name": "Liability & Indemnification",
+        "keywords": [
+          "shall",
+          "liabilities",
+          "spe",
+          "sellers",
+          "indemnity",
+          "indemnify hold"
+        ],
+        "clause_count": 2
+      },
+      {
+        "cluster_id": 3,
+        "topic_name": "Corporate Governance & M&A Controls",
+        "keywords": [
+          "shall",
+          "parties",
+          "control",
+          "threshold",
+          "sast",
+          "right"
+        ],
+        "clause_count": 3
+      },
+      {
+        "cluster_id": 4,
+        "topic_name": "Compensation, Bonds & Penalties",
+        "keywords": [
+          "crores",
+          "closing",
+          "inr crores",
+          "enterprise",
+          "deductions",
+          "inr"
+        ],
+        "clause_count": 1
+      },
+      {
+        "cluster_id": 5,
+        "topic_name": "Corporate Governance & M&A Controls",
+        "keywords": [
+          "closing",
+          "following",
+          "shall",
+          "date",
+          "closing date",
+          "article"
+        ],
+        "clause_count": 2
+      }
+    ],
+    "clauses": [
+      {
+        "clause_index": 1,
+        "preview": "SHARE PURCHASE AND MERGER AGREEMENT\n\nThis SHARE PURCHASE AND MERGER AGREEMENT (this \"Agree...",
+        "category": "indeterminate",
+        "risk_level": "high",
+        "risk_score": 86.3,
+        "matched_pattern": null,
+        "flags": [],
+        "anomaly_score": -0.464,
+        "is_anomaly": true,
+        "cluster_id": 1,
+        "cluster_topic": "Corporate Governance & M&A Controls",
+        "readability_fre": 0.0,
+        "fk_grade_level": 24.0,
+        "coleman_liau": 16.3
+      },
+      {
+        "clause_index": 2,
+        "preview": "1.1 Purchase Price. The aggregate enterprise valuation shall be Rupees Two Thousand Four H...",
+        "category": "indeterminate",
+        "risk_level": "low",
+        "risk_score": 28.6,
+        "matched_pattern": null,
+        "flags": [],
+        "anomaly_score": -0.432,
+        "is_anomaly": true,
+        "cluster_id": 4,
+        "cluster_topic": "Compensation, Bonds & Penalties",
+        "readability_fre": 43.7,
+        "fk_grade_level": 11.0,
+        "coleman_liau": 14.3
+      },
+      {
+        "clause_index": 3,
+        "preview": "1.2 Closing Date. Closing shall occur within seven (7) business days following the executi...",
+        "category": "competition_antitrust",
+        "risk_level": "critical",
+        "risk_score": 96.6,
+        "matched_pattern": "Competition Act Deal Value Threshold (DVT \u20b92000 Cr) Gun-Jumping Trap",
+        "flags": [
+          "deal value threshold"
+        ],
+        "anomaly_score": -0.42,
+        "is_anomaly": true,
+        "cluster_id": 5,
+        "cluster_topic": "Corporate Governance & M&A Controls",
+        "readability_fre": 35.3,
+        "fk_grade_level": 10.5,
+        "coleman_liau": 13.4
+      },
+      {
+        "clause_index": 4,
+        "preview": "2.1 Deal Value Threshold & Gun-Jumping. The parties acknowledge that the aggregate transac...",
+        "category": "competition_antitrust",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Competition Act Deal Value Threshold (DVT \u20b92000 Cr) Gun-Jumping Trap",
+        "flags": [
+          "sebi sast",
+          "deal value threshold",
+          "competition commission of india",
+          "gun-jumping penalty",
+          "substantial business operations in india",
+          "statutory waiting period under cci",
+          "change of control"
+        ],
+        "anomaly_score": -0.482,
+        "is_anomaly": true,
+        "cluster_id": 3,
+        "cluster_topic": "Corporate Governance & M&A Controls",
+        "readability_fre": 37.8,
+        "fk_grade_level": 12.2,
+        "coleman_liau": 14.4
+      },
+      {
+        "clause_index": 5,
+        "preview": "3.1 Immediate Termination on Change of Control. Upon any change of control, merger, or reo...",
+        "category": "change_of_control",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Hidden Change-of-Control Trigger (M&A Deal Breaker)",
+        "flags": [
+          "without penalty",
+          "change of control"
+        ],
+        "anomaly_score": -0.443,
+        "is_anomaly": true,
+        "cluster_id": 3,
+        "cluster_topic": "Corporate Governance & M&A Controls",
+        "readability_fre": 16.1,
+        "fk_grade_level": 16.7,
+        "coleman_liau": 17.4
+      },
+      {
+        "clause_index": 6,
+        "preview": "3.2 Call Option & SAST Takeover Trigger. The Purchaser is hereby granted an irrevocable ca...",
+        "category": "change_of_control",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "SEBI SAST Mandatory Open Offer Trigger (Takeover Threshold Trap)",
+        "flags": [
+          "sebi sast",
+          "mandatory open offer",
+          "acquisition of control",
+          "related party transaction",
+          "related party"
+        ],
+        "anomaly_score": -0.487,
+        "is_anomaly": true,
+        "cluster_id": 3,
+        "cluster_topic": "Corporate Governance & M&A Controls",
+        "readability_fre": 20.9,
+        "fk_grade_level": 16.4,
+        "coleman_liau": 14.2
+      },
+      {
+        "clause_index": 7,
+        "preview": "4.1 Undisclosed Related Party Asset Transfer. Within thirty (30) days following Closing, t...",
+        "category": "related_party",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Undisclosed Related Party Transaction & Section 188 Compliance Trap",
+        "flags": [
+          "off-balance sheet",
+          "section 188",
+          "section 188 of the companies act",
+          "related party",
+          "related party asset",
+          "audit committee review",
+          "audit committee",
+          "special shareholder resolution under section 188"
+        ],
+        "anomaly_score": -0.464,
+        "is_anomaly": true,
+        "cluster_id": 1,
+        "cluster_topic": "Corporate Governance & M&A Controls",
+        "readability_fre": 15.8,
+        "fk_grade_level": 16.4,
+        "coleman_liau": 16.4
+      },
+      {
+        "clause_index": 8,
+        "preview": "5.1 Enron-Style SPE Shadow Guarantee. The Sellers covenant to fully defend, indemnify, and...",
+        "category": "indemnity",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Off-Balance Sheet SPE / Shadow Guarantee Indemnity (Enron SPE Trap)",
+        "flags": [
+          "special purpose entity",
+          "off-balance sheet",
+          "spe indemnity",
+          "shadow guarantee",
+          "defend, indemnify"
+        ],
+        "anomaly_score": -0.43,
+        "is_anomaly": true,
+        "cluster_id": 2,
+        "cluster_topic": "Liability & Indemnification",
+        "readability_fre": 12.6,
+        "fk_grade_level": 16.3,
+        "coleman_liau": 18.2
+      },
+      {
+        "clause_index": 9,
+        "preview": "6.1 Uncapped Unlimited Indemnity. The Sellers jointly and severally agree to indemnify and...",
+        "category": "liability",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Uncapped Unlimited Liability",
+        "flags": [
+          "non-compete",
+          "restraint of trade",
+          "any and all claims",
+          "liability shall be uncapped",
+          "indemnify and hold harmless"
+        ],
+        "anomaly_score": -0.454,
+        "is_anomaly": true,
+        "cluster_id": 2,
+        "cluster_topic": "Liability & Indemnification",
+        "readability_fre": 4.5,
+        "fk_grade_level": 18.2,
+        "coleman_liau": 18.2
+      },
+      {
+        "clause_index": 10,
+        "preview": "7.1 Founder Global Non-Compete Lock-In. For a period of five (5) years following the Closi...",
+        "category": "non_compete",
+        "risk_level": "high",
+        "risk_score": 90.5,
+        "matched_pattern": "Founder Global Non-Compete & Lock-In Trap (M&A Restraint)",
+        "flags": [
+          "non-compete",
+          "founder global non-compete",
+          "covenants that they shall not, directly or indirectly",
+          "shall not, directly or indirectly, anywhere in the world",
+          "anywhere in the world",
+          "invest in, advise, or join",
+          "prospectively contemplated by the purchaser",
+          "founding shareholder covenants",
+          "for a period of five (5) years"
+        ],
+        "anomaly_score": -0.436,
+        "is_anomaly": true,
+        "cluster_id": 5,
+        "cluster_topic": "Corporate Governance & M&A Controls",
+        "readability_fre": 18.4,
+        "fk_grade_level": 16.3,
+        "coleman_liau": 15.7
+      },
+      {
+        "clause_index": 11,
+        "preview": "8.1 Governing Law. This Agreement shall be governed by and construed in accordance with th...",
+        "category": "governing_law",
+        "risk_level": "low",
+        "risk_score": 28.3,
+        "matched_pattern": null,
+        "flags": [],
+        "anomaly_score": -0.416,
+        "is_anomaly": true,
+        "cluster_id": 0,
+        "cluster_topic": "Dispute Resolution & Arbitration",
+        "readability_fre": 60.7,
+        "fk_grade_level": 7.8,
+        "coleman_liau": 8.9
+      },
+      {
+        "clause_index": 12,
+        "preview": "8.2 Jurisdiction. The parties irrevocably submit to the exclusive jurisdiction of the Cour...",
+        "category": "governing_law",
+        "risk_level": "medium",
+        "risk_score": 52.7,
+        "matched_pattern": "Unfavourable Distant Governing Law & Jurisdiction",
+        "flags": [
+          "exclusive jurisdiction"
+        ],
+        "anomaly_score": -0.403,
+        "is_anomaly": true,
+        "cluster_id": 0,
+        "cluster_topic": "Dispute Resolution & Arbitration",
+        "readability_fre": 25.8,
+        "fk_grade_level": 13.3,
+        "coleman_liau": 13.8
+      }
+    ]
+  },
+  "executive_employment_agreement.txt": {
+    "document_name": "Executive Employment & Retention Agreement",
+    "contract_type": "Employment Contract",
+    "total_clauses": 9,
+    "critical_count": 4,
+    "high_count": 4,
+    "medium_count": 1,
+    "low_count": 0,
+    "overall_risk_score": 88.7,
+    "overall_risk_rating": "critical",
+    "readability_score": 19.7,
+    "fk_grade_level": 16.3,
+    "power_imbalance_score": 98,
+    "top_risks": [
+      "Service Bond & Training Cost Liquidated Damages Trap (Section 74 ICA) (CRITICAL)",
+      "Post-Termination Non-Compete & Restraint of Trade (Section 27 ICA) (CRITICAL)",
+      "Broad IP Assignment (Moonlighting Grab) (CRITICAL)",
+      "Discretionary Bonus / At-Will Compensation (HIGH)",
+      "Perpetual Non-Disparagement Gag Clause vs POSH Act 2013 (CRITICAL)"
+    ],
+    "cluster_topics": [
+      {
+        "cluster_id": 0,
+        "topic_name": "Dispute Resolution & Arbitration",
+        "keywords": [
+          "mandatory binding",
+          "mandatory",
+          "binding arbitration",
+          "binding",
+          "arbitration",
+          "arising connection"
+        ],
+        "clause_count": 1
+      },
+      {
+        "cluster_id": 1,
+        "topic_name": "Restraint of Trade & Non-Compete",
+        "keywords": [
+          "executive",
+          "employment",
+          "company",
+          "months",
+          "workplace",
+          "shall"
+        ],
+        "clause_count": 4
+      },
+      {
+        "cluster_id": 2,
+        "topic_name": "Termination & Cancellation",
+        "keywords": [
+          "notice",
+          "phantom equity",
+          "shall",
+          "phantom",
+          "bonus",
+          "equity"
+        ],
+        "clause_count": 2
+      },
+      {
+        "cluster_id": 3,
+        "topic_name": "Intellectual Property & Ownership",
+        "keywords": [
+          "company",
+          "executive",
+          "business",
+          "personal",
+          "shall",
+          "time"
+        ],
+        "clause_count": 2
+      }
+    ],
+    "clauses": [
+      {
+        "clause_index": 1,
+        "preview": "EXECUTIVE EMPLOYMENT AND RETENTION AGREEMENT\n\nThis EXECUTIVE EMPLOYMENT AGREEMENT (this \"A...",
+        "category": "indeterminate",
+        "risk_level": "high",
+        "risk_score": 85.4,
+        "matched_pattern": null,
+        "flags": [],
+        "anomaly_score": -0.422,
+        "is_anomaly": true,
+        "cluster_id": 1,
+        "cluster_topic": "Restraint of Trade & Non-Compete",
+        "readability_fre": 0.0,
+        "fk_grade_level": 24.0,
+        "coleman_liau": 18.0
+      },
+      {
+        "clause_index": 2,
+        "preview": "1. APPOINTMENT AND SCOPE OF DUTIES\nThe Company agrees to employ the Executive in the capac...",
+        "category": "indeterminate",
+        "risk_level": "high",
+        "risk_score": 74.5,
+        "matched_pattern": null,
+        "flags": [],
+        "anomaly_score": -0.401,
+        "is_anomaly": true,
+        "cluster_id": 3,
+        "cluster_topic": "Intellectual Property & Ownership",
+        "readability_fre": 30.2,
+        "fk_grade_level": 12.0,
+        "coleman_liau": 12.1
+      },
+      {
+        "clause_index": 3,
+        "preview": "2. SERVICE BOND AND TRAINING COST RECOVERY (SECTION 74 ICA)\nThe Executive agrees to serve ...",
+        "category": "penalty",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Service Bond & Training Cost Liquidated Damages Trap (Section 74 ICA)",
+        "flags": [
+          "service bond",
+          "training cost recovery",
+          "bond period of",
+          "forfeit security deposit",
+          "forfeit"
+        ],
+        "anomaly_score": -0.491,
+        "is_anomaly": true,
+        "cluster_id": 1,
+        "cluster_topic": "Restraint of Trade & Non-Compete",
+        "readability_fre": 29.0,
+        "fk_grade_level": 14.1,
+        "coleman_liau": 13.4
+      },
+      {
+        "clause_index": 4,
+        "preview": "3. POST-TERMINATION NON-COMPETE AND COMPETITOR RESTRAINT (SECTION 27 ICA)\nUpon cessation o...",
+        "category": "non_compete",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Post-Termination Non-Compete & Restraint of Trade (Section 27 ICA)",
+        "flags": [
+          "non-compete",
+          "for a period of 6 months following cessation",
+          "post-termination",
+          "named competitors",
+          "tcs, infosys, wipro, cognizant, hcl",
+          "same client or customer",
+          "restraint on future employment"
+        ],
+        "anomaly_score": -0.466,
+        "is_anomaly": true,
+        "cluster_id": 1,
+        "cluster_topic": "Restraint of Trade & Non-Compete",
+        "readability_fre": 12.3,
+        "fk_grade_level": 18.2,
+        "coleman_liau": 16.4
+      },
+      {
+        "clause_index": 5,
+        "preview": "4. COMPREHENSIVE IP ASSIGNMENT AND MOONLIGHTING GRAB\nAll inventions, software code, algori...",
+        "category": "ip_ownership",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Broad IP Assignment (Moonlighting Grab)",
+        "flags": [
+          "all inventions",
+          "works made for hire",
+          "conceived or developed",
+          "during the term of employment",
+          "using company resources",
+          "including personal time",
+          "sole and exclusive property"
+        ],
+        "anomaly_score": -0.447,
+        "is_anomaly": true,
+        "cluster_id": 3,
+        "cluster_topic": "Intellectual Property & Ownership",
+        "readability_fre": 11.2,
+        "fk_grade_level": 18.2,
+        "coleman_liau": 17.0
+      },
+      {
+        "clause_index": 6,
+        "preview": "5. DISCRETIONARY BONUS AND PHANTOM EQUITY CLAWBACK\nAny annual bonus, performance incentive...",
+        "category": "salary_compensation",
+        "risk_level": "high",
+        "risk_score": 89.3,
+        "matched_pattern": "Discretionary Bonus / At-Will Compensation",
+        "flags": [
+          "phantom equity clawback",
+          "discretionary bonus",
+          "not a contractual entitlement",
+          "clawback"
+        ],
+        "anomaly_score": -0.405,
+        "is_anomaly": true,
+        "cluster_id": 2,
+        "cluster_topic": "Termination & Cancellation",
+        "readability_fre": 17.1,
+        "fk_grade_level": 17.3,
+        "coleman_liau": 16.4
+      },
+      {
+        "clause_index": 7,
+        "preview": "6. PERPETUAL NON-DISPARAGEMENT GAG CLAUSE & POSH RESTRICTION\nThe Executive agrees to keep ...",
+        "category": "confidentiality",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Perpetual Non-Disparagement Gag Clause vs POSH Act 2013",
+        "flags": [
+          "perpetual non-disparagement"
+        ],
+        "anomaly_score": -0.435,
+        "is_anomaly": true,
+        "cluster_id": 1,
+        "cluster_topic": "Restraint of Trade & Non-Compete",
+        "readability_fre": 18.4,
+        "fk_grade_level": 16.3,
+        "coleman_liau": 17.6
+      },
+      {
+        "clause_index": 8,
+        "preview": "7. TERMINATION AND NOTICE ASYMMETRY\nThe Company reserves the right to terminate this Agree...",
+        "category": "termination",
+        "risk_level": "high",
+        "risk_score": 74.1,
+        "matched_pattern": null,
+        "flags": [],
+        "anomaly_score": -0.446,
+        "is_anomaly": true,
+        "cluster_id": 2,
+        "cluster_topic": "Termination & Cancellation",
+        "readability_fre": 39.1,
+        "fk_grade_level": 12.5,
+        "coleman_liau": 12.9
+      },
+      {
+        "clause_index": 9,
+        "preview": "8. GOVERNING LAW AND MANDATORY BINDING ARBITRATION\nAny dispute arising out of or in connec...",
+        "category": "waiver",
+        "risk_level": "medium",
+        "risk_score": 54.4,
+        "matched_pattern": "Broad Statutory Rights Waiver",
+        "flags": [
+          "waive any right"
+        ],
+        "anomaly_score": -0.446,
+        "is_anomaly": true,
+        "cluster_id": 0,
+        "cluster_topic": "Dispute Resolution & Arbitration",
+        "readability_fre": 20.2,
+        "fk_grade_level": 14.2,
+        "coleman_liau": 15.9
+      }
+    ]
+  },
+  "saas_consumer_terms.txt": {
+    "document_name": "SaaS Platform Consumer Terms of Service",
+    "contract_type": "Consumer Terms of Service",
+    "total_clauses": 8,
+    "critical_count": 3,
+    "high_count": 3,
+    "medium_count": 1,
+    "low_count": 1,
+    "overall_risk_score": 80.1,
+    "overall_risk_rating": "critical",
+    "readability_score": 29.7,
+    "fk_grade_level": 14.1,
+    "power_imbalance_score": 98,
+    "top_risks": [
+      "Unilateral Terms & Price Escalation (Continuous Modification Trap) (CRITICAL)",
+      "Negative Option Billing & Zombie Subscription Trap (HIGH)",
+      "Cross-Service Forced Arbitration (Disney+ Piccolo Doctrine) (CRITICAL)",
+      "Forced Class Action Waiver & Collective Redress Ban (HIGH)",
+      "Broad Data License & Commercialization Clause (HIGH)"
+    ],
+    "cluster_topics": [
+      {
+        "cluster_id": 0,
+        "topic_name": "Dispute Resolution & Arbitration",
+        "keywords": [
+          "class",
+          "claims",
+          "arbitration",
+          "premises",
+          "waiver collective",
+          "waiver"
+        ],
+        "clause_count": 2
+      },
+      {
+        "cluster_id": 1,
+        "topic_name": "SaaS Terms, Modifications & Auto-Renewal",
+        "keywords": [
+          "terms",
+          "subscription",
+          "billing",
+          "prior",
+          "option billing",
+          "option"
+        ],
+        "clause_count": 3
+      },
+      {
+        "cluster_id": 2,
+        "topic_name": "Liability & Indemnification",
+        "keywords": [
+          "data",
+          "company",
+          "transfer",
+          "liability",
+          "dpdp act",
+          "dpdp"
+        ],
+        "clause_count": 2
+      },
+      {
+        "cluster_id": 3,
+        "topic_name": "SaaS Terms, Modifications & Auto-Renewal",
+        "keywords": [
+          "terms service",
+          "terms",
+          "service",
+          "platform",
+          "consumer terms",
+          "consumer"
+        ],
+        "clause_count": 1
+      }
+    ],
+    "clauses": [
+      {
+        "clause_index": 1,
+        "preview": "STREAMFLOW CLOUD PLATFORM & ENTERPRISE CONSUMER TERMS OF SERVICE\n\nLast Revised: November 2...",
+        "category": "indeterminate",
+        "risk_level": "low",
+        "risk_score": 29.8,
+        "matched_pattern": null,
+        "flags": [],
+        "anomaly_score": -0.492,
+        "is_anomaly": true,
+        "cluster_id": 3,
+        "cluster_topic": "SaaS Terms, Modifications & Auto-Renewal",
+        "readability_fre": 52.6,
+        "fk_grade_level": 11.1,
+        "coleman_liau": 13.2
+      },
+      {
+        "clause_index": 2,
+        "preview": "1. ACCEPTANCE AND UNILATERAL MODIFICATION OF TERMS\nStreamFlow Inc. (\"Company\") reserves th...",
+        "category": "unilateral_modification",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Unilateral Terms & Price Escalation (Continuous Modification Trap)",
+        "flags": [
+          "unilateral modification",
+          "modify these terms",
+          "without prior notice",
+          "at our sole discretion"
+        ],
+        "anomaly_score": -0.436,
+        "is_anomaly": true,
+        "cluster_id": 1,
+        "cluster_topic": "SaaS Terms, Modifications & Auto-Renewal",
+        "readability_fre": 38.1,
+        "fk_grade_level": 10.9,
+        "coleman_liau": 14.6
+      },
+      {
+        "clause_index": 3,
+        "preview": "2. NEGATIVE OPTION BILLING AND ZOMBIE AUTO-RENEWAL\nYour free trial will automatically enro...",
+        "category": "auto_renewal",
+        "risk_level": "high",
+        "risk_score": 87.0,
+        "matched_pattern": "Negative Option Billing & Zombie Subscription Trap",
+        "flags": [
+          "negative option billing",
+          "zombie subscription",
+          "auto-renewal"
+        ],
+        "anomaly_score": -0.477,
+        "is_anomaly": true,
+        "cluster_id": 1,
+        "cluster_topic": "SaaS Terms, Modifications & Auto-Renewal",
+        "readability_fre": 14.8,
+        "fk_grade_level": 16.0,
+        "coleman_liau": 17.9
+      },
+      {
+        "clause_index": 4,
+        "preview": "3. CROSS-SERVICE FORCED ARBITRATION (DISNEY+ PICCOLO DOCTRINE)\nBy creating an account or s...",
+        "category": "arbitration",
+        "risk_level": "critical",
+        "risk_score": 100.0,
+        "matched_pattern": "Cross-Service Forced Arbitration (Disney+ Piccolo Doctrine)",
+        "flags": [
+          "disney+",
+          "any affiliate or subsidiary",
+          "irrevocably waive"
+        ],
+        "anomaly_score": -0.449,
+        "is_anomaly": true,
+        "cluster_id": 0,
+        "cluster_topic": "Dispute Resolution & Arbitration",
+        "readability_fre": 13.5,
+        "fk_grade_level": 19.6,
+        "coleman_liau": 15.7
+      },
+      {
+        "clause_index": 5,
+        "preview": "4. FORCED CLASS ACTION WAIVER AND COLLECTIVE REDRESS BAN\nAll claims must be brought strict...",
+        "category": "waiver",
+        "risk_level": "high",
+        "risk_score": 80.3,
+        "matched_pattern": "Forced Class Action Waiver & Collective Redress Ban",
+        "flags": [
+          "class action waiver",
+          "individual capacity and not as a plaintiff or class member"
+        ],
+        "anomaly_score": -0.459,
+        "is_anomaly": true,
+        "cluster_id": 0,
+        "cluster_topic": "Dispute Resolution & Arbitration",
+        "readability_fre": 32.5,
+        "fk_grade_level": 13.1,
+        "coleman_liau": 15.3
+      },
+      {
+        "clause_index": 6,
+        "preview": "5. DATA COMMERCIALIZATION AND DPDP ACT LIABILITY TRANSFER\nYou grant the Company an irrevoc...",
+        "category": "data_privacy",
+        "risk_level": "high",
+        "risk_score": 90.4,
+        "matched_pattern": "Broad Data License & Commercialization Clause",
+        "flags": [
+          "dpdp act 2023",
+          "cross-border data transfer",
+          "defend, indemnify",
+          "sublicensable",
+          "worldwide license",
+          "sell or transfer"
+        ],
+        "anomaly_score": -0.458,
+        "is_anomaly": true,
+        "cluster_id": 2,
+        "cluster_topic": "Liability & Indemnification",
+        "readability_fre": 17.6,
+        "fk_grade_level": 15.7,
+        "coleman_liau": 16.4
+      },
+      {
+        "clause_index": 7,
+        "preview": "6. ONE-SIDED LIMITATION OF LIABILITY\nIn no event will the Company, its directors, or affil...",
+        "category": "liability",
+        "risk_level": "critical",
+        "risk_score": 97.1,
+        "matched_pattern": null,
+        "flags": [],
+        "anomaly_score": -0.417,
+        "is_anomaly": true,
+        "cluster_id": 2,
+        "cluster_topic": "Liability & Indemnification",
+        "readability_fre": 18.4,
+        "fk_grade_level": 15.4,
+        "coleman_liau": 14.1
+      },
+      {
+        "clause_index": 8,
+        "preview": "7. GOVERNING LAW AND EXCLUSIVE VENUE\nThese Terms shall be governed by the laws of the Stat...",
+        "category": "governing_law",
+        "risk_level": "medium",
+        "risk_score": 56.2,
+        "matched_pattern": "Unfavourable Distant Governing Law & Jurisdiction",
+        "flags": [
+          "exclusive jurisdiction",
+          "governed by the laws of",
+          "delaware courts"
+        ],
+        "anomaly_score": -0.436,
+        "is_anomaly": true,
+        "cluster_id": 1,
+        "cluster_topic": "SaaS Terms, Modifications & Auto-Renewal",
+        "readability_fre": 50.4,
+        "fk_grade_level": 11.1,
+        "coleman_liau": 11.2
+      }
+    ]
+  }
+}
