@@ -195,6 +195,13 @@ async def test_upload_rejects_mismatched_pdf_signature(client: AsyncClient):
 
 
 @pytest.mark.asyncio
+async def test_upload_rejects_legacy_doc_format(client: AsyncClient):
+    files = {"file": ("legacy.doc", b"legacy Word binary content", "application/msword")}
+    response = await client.post("/api/documents/upload", files=files)
+    assert response.status_code == 415
+
+
+@pytest.mark.asyncio
 async def test_upload_rejects_empty_file(client: AsyncClient):
     files = {"file": ("empty.txt", b"", "text/plain")}
     response = await client.post("/api/documents/upload", files=files)
