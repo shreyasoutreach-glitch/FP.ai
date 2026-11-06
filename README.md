@@ -20,7 +20,7 @@
 [What It Catches](#-the-fine-print-hall-of-shame) •
 [Architecture](#-system-architecture) •
 [Quick Start](#-quick-start) •
-[Testing & Verification](#-test-verification--quality-gates) •
+[Evaluation & Testing](#-reproducible-evaluation) •
 [License](#-license)
 
 ---
@@ -122,6 +122,8 @@ flowchart TD
 - **Power-imbalance fallback corrected:** the displayed estimate is derived from the analyzed clause set rather than a hard-coded neutral value.
 - **Evaluation tooling added:** a reproducible runner compares rule matching and hybrid screening against human-labelled JSONL data and reports precision, recall, F1 and a confusion matrix.
 - **Deletion now removes derived records:** deleting a source document also deletes its associated analysis rows, preventing orphaned clause findings and downloadable reports from remaining after document deletion.
+- **Unsupported bargaining-power claims removed:** the dashboard and PDF now show a flagged-clause pressure proxy and explain its inputs instead of asserting party advantage, fixed exit-right ratios, indemnity caps or dispute forums not extracted from the agreement.
+- **Backend regression checks automated:** a GitHub Actions workflow and pinned test-only dependencies are configured to run the pytest suite on backend pushes and pull requests.
 
 ## 🎯 What FP.ai Delivers in Action
 
@@ -225,7 +227,7 @@ npm run dev
 # In backend/.env:
 GEMINI_API_KEY=your_free_key_from_aistudio.google.com
 ```
-> **Note**: FP.ai's unsupervised machine learning engine, anomaly detection, statutory pattern matching, and PDF report generation run **100% locally and offline without requiring an API key**.
+> **Note**: Clause screening and report generation run in the backend service. The optional Gemini explanation layer is only available when a backend API key is configured. Uploaded files are stored by the service; this deployment is not an offline or zero-retention system.
 
 ---
 
@@ -235,7 +237,7 @@ GEMINI_API_KEY=your_free_key_from_aistudio.google.com
 FP.ai/
 ├── 📄 README.md                        # Master purpose manifesto & system guide
 ├── 🐍 setup.py                         # Automated environment provisioner
-├── 🧪 run_backend_tests.py             # Unified quality gate (Pytest + ML suite)
+├── 🧪 run_backend_tests.py             # Local backend and ML scenario test runner
 ├── 🔬 test_ml_engine.py                # Standalone historical contract verifier
 ├── 🐳 docker-compose.yml               # Containerized full-stack deployment
 ├── 📦 FP.ai.zip                        # Portable distribution archive
@@ -243,13 +245,14 @@ FP.ai/
 ├── 📁 backend/                         # FastAPI Python Backend
 │   ├── main.py                         # App entrypoint, lifespan & CORS
 │   ├── requirements.txt                # Production dependencies
+│   ├── requirements-dev.txt             # Pinned pytest and HTTP test dependencies
 │   ├── .env.example                    # Configuration template
 │   ├── Dockerfile                      # Backend container configuration
 │   │
 │   ├── 📁 app/
 │   │   ├── 📁 api/routes/              # RESTful API Endpoints
 │   │   │   ├── analysis.py             # Core analysis & 1-click demo endpoints
-│   │   │   ├── documents.py            # PDF/DOCX/TXT secure file handling
+│   │   │   ├── documents.py            # PDF/DOCX/TXT validation and file lifecycle
 │   │   │   ├── health.py               # Microservice status & ML health
 │   │   │   ├── reports.py              # ReportLab PDF & JSON generators
 │   │   │   └── training.py             # Knowledge base & protected annotation intake
@@ -269,7 +272,7 @@ FP.ai/
 │   │   └── 📁 services/                # Business Logic Services
 │   │       ├── demo_data.py            # Pre-loaded M&A, Employment & SaaS contracts
 │   │       ├── extractor.py            # Hierarchical clause segmenter (PDF/DOCX/TXT)
-│   │       ├── gemini_service.py       # Structured Google Gemini 3.8 Flash caller
+│   │       ├── gemini_service.py       # Optional structured Gemini explanation service
 │   │       └── reports_service.py      # Rich ReportLab PDF report styling engine
 │   │
 │   └── 📁 tests/                       # Pytest unit and API integration tests
@@ -277,6 +280,9 @@ FP.ai/
 │       ├── test_api_endpoints.py       # End-to-end route integration tests
 │       ├── test_extractor.py           # Document parsing & encoding tests
 │       └── test_knowledge_base.py      # Statutory pattern trigger tests
+│
+├── 📁 .github/workflows/               # Continuous integration
+│   └── backend-tests.yml                # Run pytest on backend changes and pull requests
 │
 ├── 📁 frontend/                        # React 18 + TypeScript + Vite UI
 │   ├── index.html                      # HTML5 container with Inter & JetBrains Mono
@@ -292,7 +298,7 @@ FP.ai/
 │       │   ├── ContractClauseViewer.tsx# 2-Pane Split Document Reader & Inspector
 │       │   ├── DemoContractsSelector.tsx# 1-Click demo contract runner
 │       │   ├── Layout.tsx              # Minimalist header navigation & brand bar
-│       │   ├── PowerImbalanceVisualizer.tsx# Visual contractual asymmetry scale
+│       │   ├── PowerImbalanceVisualizer.tsx# Flagged-clause pressure proxy
 │       │   └── RadarRiskChart.tsx      # 6-Axis interactive Recharts radar profile
 │       │
 │       ├── 📁 data/                    # Static UI Data & Pre-computed Contracts
@@ -306,7 +312,7 @@ FP.ai/
 │           └── ResultsPage.tsx         # Comprehensive multi-tab analysis dashboard
 │
 └── 📁 data/
-    ├── 📁 samples/                     # Real-world toxic contract test cases
+    ├── 📁 samples/                     # Illustrative contract scenarios
     │   ├── executive_employment_agreement.txt
     │   ├── ma_acquisition_agreement.txt
     │   ├── saas_consumer_terms.txt
