@@ -177,7 +177,7 @@ def _build_rich_reportlab_pdf(data: Dict[str, Any], document_name: str) -> bytes
         [
             Paragraph("<b>Clauses Analyzed:</b>", small_label),
             Paragraph(str(data.get("total_clauses", len(data.get("clauses", [])))), body_style),
-            Paragraph("<b>Power Imbalance Score:</b>", small_label),
+            Paragraph("<b>Flagged-Clause Pressure Index:</b>", small_label),
             Paragraph(f"{data.get('power_imbalance_score', 50)} / 100", body_style),
         ],
     ]
