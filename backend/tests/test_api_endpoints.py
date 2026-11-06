@@ -180,6 +180,12 @@ async def test_document_upload_analyze_and_reports_workflow(client: AsyncClient,
     assert del_resp.status_code == 200
     assert del_resp.json()["deleted"] == doc_id
 
+    deleted_analysis = await client.get(f"/api/analysis/{analysis_id}")
+    assert deleted_analysis.status_code == 404
+
+    deleted_report = await client.get(f"/api/reports/{analysis_id}/json")
+    assert deleted_report.status_code == 404
+
 
 @pytest.mark.asyncio
 async def test_upload_rejects_mismatched_pdf_signature(client: AsyncClient):
