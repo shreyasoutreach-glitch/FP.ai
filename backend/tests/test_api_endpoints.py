@@ -35,8 +35,13 @@ async def test_training_knowledge_base_endpoint(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_training_stats_and_add_example(client: AsyncClient):
+async def test_training_stats_and_add_example(client: AsyncClient, monkeypatch, tmp_path):
     """Test querying stats and submitting a new training example."""
+    from app.core.config import settings
+    from app.api.routes import training as training_routes
+    monkeypatch.setattr(settings, "TRAINING_ADMIN_KEY", "test-admin-key")
+    monkeypatch.setattr(training_routes, "TRAINING_FILE", str(tmp_path / "examples.jsonl"))
+
     stats_resp = await client.get("/api/training/stats")
     assert stats_resp.status_code == 200
     assert "total_examples" in stats_resp.json()
@@ -49,9 +54,12 @@ async def test_training_stats_and_add_example(client: AsyncClient):
         "notes": "Test submission from test suite",
         "source": "test_suite",
     }
-    add_resp = await client.post("/api/training/examples", json=example_payload)
+    add_resp = await client.post("/api/training/examples", json=example_payload, headers={"Authorization": "Bearer test-admin-key"})
     assert add_resp.status_code == 201
     assert add_resp.json()["status"] == "added"
+
+    rejected = await client.post("/api/training/examples", json=example_payload)
+    assert rejected.status_code == 401
 
 
 @pytest.mark.asyncio
@@ -171,6 +179,20 @@ async def test_document_upload_analyze_and_reports_workflow(client: AsyncClient,
     del_resp = await client.delete(f"/api/documents/{doc_id}")
     assert del_resp.status_code == 200
     assert del_resp.json()["deleted"] == doc_id
+
+
+@pytest.mark.asyncio
+async def test_upload_rejects_mismatched_pdf_signature(client: AsyncClient):
+    files = {"file": ("not-a-pdf.pdf", b"plain text masquerading as PDF", "application/pdf")}
+    response = await client.post("/api/documents/upload", files=files)
+    assert response.status_code == 415
+
+
+@pytest.mark.asyncio
+async def test_upload_rejects_empty_file(client: AsyncClient):
+    files = {"file": ("empty.txt", b"", "text/plain")}
+    response = await client.post("/api/documents/upload", files=files)
+    assert response.status_code == 400
 
 
 @pytest.mark.asyncio
