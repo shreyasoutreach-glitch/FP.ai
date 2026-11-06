@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     # Gemini
     GEMINI_API_KEY: str = ""
 
+    # Protects annotation-corpus writes; leave unset to disable the endpoint.
+    TRAINING_ADMIN_KEY: str = ""
+
     # Database
     DATABASE_URL: str = "sqlite+aiosqlite:///./fpai.db"
 
