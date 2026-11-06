@@ -242,7 +242,7 @@ export default function KnowledgePage() {
           Fine Print Knowledge Base
         </h1>
         <p className="text-fp-muted text-sm mt-2 max-w-3xl leading-relaxed">
-          The legal patterns FP.ai flags — cross-referenced against the Indian Contract Act 1872,
+          Potential clause-pattern references for further review. These matches are not legal conclusions. The knowledge base includes references to the Indian Contract Act 1872,
           SEBI disclosure regulations, DPDP Act 2023, FTC rules, and landmark common-law precedents.
         </p>
       </div>
@@ -258,11 +258,11 @@ export default function KnowledgePage() {
             </div>
             <div>
               <h2 className="text-base font-bold text-fp-text">Live Clause Test Simulator</h2>
-              <p className="text-xs text-fp-muted">Paste any sentence to see what FP.ai flags in real-time</p>
+              <p className="text-xs text-fp-muted">Paste a clause to preview exact phrase matches against the reference patterns</p>
             </div>
           </div>
           <span className="text-[11px] font-mono text-fp-accent bg-fp-accent/10 border border-fp-accent/30 rounded-full px-2.5 py-0.5">
-            Real-Time Neural Heuristic
+            Rule-based pattern preview
           </span>
         </div>
 
