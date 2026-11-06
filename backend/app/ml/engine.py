@@ -662,7 +662,7 @@ class FPMLEngine:
                     "Review this clause carefully with legal counsel to clarify ambiguities "
                     "and incorporate standard mutual carve-outs."
                 )
-                legal_basis = "General contract law principles (Indian Contract Act 1872)"
+                legal_basis = "No specific statutory reference matched. Applicability depends on the governing law and contract context."
                 matched_name = None
                 match_strength = 0.0
 
