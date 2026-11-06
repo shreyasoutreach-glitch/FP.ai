@@ -89,27 +89,24 @@ FP.ai combines structured phrase matching with document-level statistical analys
 
 ```mermaid
 flowchart TD
-    DOC["📄 Contract Document\n(PDF · DOCX · TXT)"] --> EXT["🔬 Forensic Extractor\n(pdfminer.six · python-docx · PyPDF2)"]
-    EXT --> SEG["✂️ Clause Segmenter\n(Hierarchical regex · roman numerals · structure)"]
-    
-    subgraph ML_PIPELINE["Unsupervised ML Pipeline (Offline & Private)"]
-        SEG --> EMB["🧠 Dual Vectorizer Engine\nSentenceTransformers (all-MiniLM-L6-v2)\n+ Subword TF-IDF n-gram Fallback"]
-        EMB --> HDBSCAN["🔵 Unsupervised Clustering\n(HDBSCAN / K-Means)"]
-        HDBSCAN --> TOPIC["🏷️ Automatic Cluster Topic Modeler\n(Cluster TF-IDF Term Density)"]
-        EMB --> IF["🔴 Isolation Forest Anomaly Engine\n(Statistical Divergence & Concealment Scoring)"]
-        SEG --> OBSCURITY["📐 Readability & Linguistic Obscurity\n(Flesch Reading Ease · Flesch-Kincaid Grade · Coleman-Liau)"]
-        SEG --> KB_MATCH["📚 Statutory Knowledge Base Matcher\n(29 Precedents · ICA · SEBI · DPDP · FTC · GDPR)"]
+    DOC["Contract document<br/>(PDF · DOCX · TXT)"] --> EXT["Text extraction"]
+    EXT --> SEG["Clause segmentation"]
+    subgraph SCREENING["Production screening pipeline"]
+        SEG --> VEC["Word + character TF-IDF"]
+        VEC --> CLUST["K-Means clustering"]
+        CLUST --> TOPIC["Cluster keyword summaries"]
+        VEC --> ISO["Isolation Forest<br/>document-relative outlier signal"]
+        SEG --> READ["Readability measures"]
+        SEG --> KB["Curated legal-pattern matching"]
     end
-    
-    ML_PIPELINE --> COMPOSITE["📊 Composite Risk & Power Imbalance Engine\n(0–100 Normalized Severity · Covenant Asymmetry)"]
-    
-    subgraph AI_SYNTHESIS["Optional Gemini Intelligence Layer"]
-        COMPOSITE --> GEMINI["🤖 Gemini 3.8 Flash (`google-genai`)\nExecutive Brief · Hidden Dangers · Redline Recommendations"]
-    end
-    
-    COMPOSITE --> UI["💻 Dynamic Minimalist UI\n(Split-screen document inspector · Radar chart · Live simulator)"]
-    AI_SYNTHESIS --> UI
-    COMPOSITE --> REPORTS["📑 Executive Exporters\n(ReportLab Vector PDF Report · Structured JSON)"]
+    CLUST --> SCORE["Heuristic clause scoring<br/>base severity + anomaly + readability + matched phrases"]
+    ISO --> SCORE
+    READ --> SCORE
+    KB --> SCORE
+    SCORE --> UI["Clause inspector and result dashboard"]
+    SCORE --> REPORT["PDF and JSON exports"]
+    SCORE -. "only when GEMINI_API_KEY is configured" .-> GEMINI["Optional Gemini explanation layer"]
+    GEMINI --> UI
 ```
 
 ---
@@ -275,7 +272,7 @@ FP.ai/
 │   │       ├── gemini_service.py       # Structured Google Gemini 3.8 Flash caller
 │   │       └── reports_service.py      # Rich ReportLab PDF report styling engine
 │   │
-│   └── 📁 tests/                       # Pytest Suite (100% Pass Rate)
+│   └── 📁 tests/                       # Pytest unit and API integration tests
 │       ├── conftest.py                 # Async test client & fixture generators
 │       ├── test_api_endpoints.py       # End-to-end route integration tests
 │       ├── test_extractor.py           # Document parsing & encoding tests
