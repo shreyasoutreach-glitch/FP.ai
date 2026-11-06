@@ -124,6 +124,7 @@ flowchart TD
 - **Optional Gemini path made explicit:** synthesis is skipped when no backend API key is configured, and the system prompt directs the model not to invent legal authorities or make automatic enforceability conclusions.
 - **Power-imbalance fallback corrected:** the displayed estimate is derived from the analyzed clause set rather than a hard-coded neutral value.
 - **Evaluation tooling added:** a reproducible runner compares rule matching and hybrid screening against human-labelled JSONL data and reports precision, recall, F1 and a confusion matrix.
+- **Deletion now removes derived records:** deleting a source document also deletes its associated analysis rows, preventing orphaned clause findings and downloadable reports from remaining after document deletion.
 
 ## 🎯 What FP.ai Delivers in Action
 
