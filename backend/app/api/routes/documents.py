@@ -8,11 +8,12 @@ from typing import List
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Request
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 
 from app.core.config import settings
 from app.core.database import get_db
 from app.models.document import Document
+from app.models.analysis import Analysis
 from app.services.extractor import detect_contract_type
 
 logger = logging.getLogger("fpai.documents")
@@ -144,6 +145,9 @@ async def delete_document(doc_id: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(404, "Document not found")
     if os.path.exists(doc.upload_path):
         os.remove(doc.upload_path)
+    # Remove derived analyses as well; a deleted upload must not leave its
+    # extracted clauses and reports available through the analysis endpoints.
+    await db.execute(delete(Analysis).where(Analysis.document_id == doc_id))
     await db.delete(doc)
     await db.commit()
     return {"deleted": doc_id}
