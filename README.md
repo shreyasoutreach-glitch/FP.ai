@@ -276,11 +276,14 @@ FP.ai/
 │   │       ├── gemini_service.py       # Optional structured Gemini explanation service
 │   │       └── reports_service.py      # Rich ReportLab PDF report styling engine
 │   │
+│   ├── 📁 evaluation/                  # Human-labelled data evaluation tools
+│   │   └── evaluate_classifier.py      # Rule baseline vs hybrid metrics
 │   └── 📁 tests/                       # Pytest unit and API integration tests
 │       ├── conftest.py                 # Async test client & fixture generators
 │       ├── test_api_endpoints.py       # End-to-end route integration tests
 │       ├── test_extractor.py           # Document parsing & encoding tests
-│       └── test_knowledge_base.py      # Statutory pattern trigger tests
+│       ├── test_knowledge_base.py      # Statutory pattern trigger tests
+│       └── test_risk_scoring.py        # Heuristic score breakdown tests
 │
 ├── 📁 .github/workflows/               # Continuous integration
 │   └── backend-tests.yml                # Run pytest on backend changes and pull requests
@@ -317,7 +320,7 @@ FP.ai/
     │   ├── executive_employment_agreement.txt
     │   ├── ma_acquisition_agreement.txt
     │   ├── saas_consumer_terms.txt
-    │   └── test_results.json           # Verified ML test execution snapshot
+    │   └── test_results.json           # Sample analysis output
     └── 📁 training/
         └── examples.jsonl              # Admin-submitted annotations for offline evaluation
 ```
