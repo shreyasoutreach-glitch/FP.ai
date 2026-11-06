@@ -65,7 +65,7 @@ async def upload_document(
     if not content:
         raise HTTPException(400, "The uploaded file is empty.")
 
-    if ext == ".pdf" and not content.startswith(b"%PDF-"):
+    if ext == ".pdf" and b"%PDF-" not in content[:1024]:
         raise HTTPException(415, "The file extension is PDF but its contents are not a PDF document.")
     if ext == ".docx" and not content.startswith(b"PK\x03\x04"):
         raise HTTPException(415, "The file extension is DOCX but its contents are not a DOCX archive.")
