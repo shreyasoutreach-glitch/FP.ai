@@ -20,8 +20,7 @@ export default function AnalysisPage() {
   const [step, setStep] = useState<Step>('upload')
   const [file, setFile] = useState<File | null>(null)
   const [fileText, setFileText] = useState<string>('')
-  const [useGemini, setUseGemini] = useState(true)
-  const [jurisdiction, setJurisdiction] = useState<'india' | 'us' | 'uk_eu'>('india')
+  const [useGemini, setUseGemini] = useState(false)
   const [progress, setProgress] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -48,7 +47,6 @@ export default function AnalysisPage() {
     accept: {
       'application/pdf': ['.pdf'],
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
-      'application/msword': ['.doc'],
       'text/plain': ['.txt'],
     },
     maxFiles: 1,
@@ -85,7 +83,7 @@ export default function AnalysisPage() {
 
         // 2. Analyse via backend
         setStep('analysing')
-        setProgress('Running unsupervised ML clustering, anomaly isolation & Gemini AI…')
+        setProgress(useGemini ? 'Running clause analysis and optional Gemini synthesis…' : 'Running clause analysis, pattern matching and document-relative anomaly detection…')
         const anaRes = await api.post('/api/analysis/run', {
           document_id: docId,
           use_gemini: useGemini,
@@ -149,7 +147,7 @@ export default function AnalysisPage() {
 
         <div className="flex items-center gap-2 text-xs font-mono text-fp-muted bg-fp-surface border border-fp-border px-3 py-1.5 rounded-lg">
           <Shield className="w-3.5 h-3.5 text-fp-accent" />
-          <span>Zero-Retention Architecture</span>
+          <span>Backend-stored files · Delete after review</span>
         </div>
       </div>
 
@@ -165,7 +163,7 @@ export default function AnalysisPage() {
           <h2 className="text-sm font-semibold uppercase tracking-wider text-fp-muted font-mono flex items-center gap-2">
             <Upload className="w-4 h-4 text-fp-accent" /> Or Upload Your Own File
           </h2>
-          <span className="text-xs text-fp-muted">PDF · DOCX · DOC · TXT</span>
+          <span className="text-xs text-fp-muted">PDF · DOCX · TXT</span>
         </div>
 
         <AnimatePresence mode="wait">
@@ -227,7 +225,7 @@ export default function AnalysisPage() {
                   'Text Extraction',
                   'Clause Segmentation',
                   'Anomaly Detection',
-                  'Indian Act §27 Checks',
+                  'Legal pattern matching',
                   'Plain-English Synthesis',
                 ].map((s, i) => (
                   <span
@@ -301,7 +299,7 @@ export default function AnalysisPage() {
                     <p className="font-semibold text-fp-text text-sm mb-1">
                       {isDragActive ? 'Drop file to ingest immediately' : 'Click to select or drag and drop your contract'}
                     </p>
-                    <p className="text-xs text-fp-muted">PDF, DOCX, DOC, TXT (Maximum 50 MB)</p>
+                    <p className="text-xs text-fp-muted">PDF, DOCX, TXT (Maximum 50 MB)</p>
                   </>
                 )}
               </div>
@@ -335,29 +333,22 @@ export default function AnalysisPage() {
                     <div>
                       <div className="text-xs font-semibold text-fp-text flex items-center gap-1.5">
                         <Sparkles className="w-3 h-3 text-fp-accent" />
-                        <span>Gemini AI Deep Reasoning</span>
+                        <span>Optional Gemini AI synthesis</span>
                       </div>
                       <p className="text-[11px] text-fp-muted mt-0.5">
-                        Augments statistical ML with LLM legal reasoning & plain-English translations.
+                        Runs only when GEMINI_API_KEY is configured on the backend. Off by default.
                       </p>
                     </div>
                   </label>
 
-                  {/* Jurisdiction focus */}
-                  <div className="p-2.5 rounded-lg border border-fp-border/50 bg-fp-surface/30 space-y-1.5">
+                  <div className="p-2.5 rounded-lg border border-fp-border/50 bg-fp-surface/30">
                     <div className="text-xs font-semibold text-fp-text flex items-center gap-1.5">
-                      <Shield className="w-3 h-3 text-fp-accent" />
-                      <span>Primary Legal Benchmark</span>
+                      <Info className="w-3 h-3 text-fp-accent" />
+                      <span>Legal context</span>
                     </div>
-                    <select
-                      value={jurisdiction}
-                      onChange={(e) => setJurisdiction(e.target.value as 'india' | 'us' | 'uk_eu')}
-                      className="w-full bg-fp-bg border border-fp-border text-xs rounded px-2 py-1 text-fp-text focus:outline-none focus:border-fp-accent"
-                    >
-                      <option value="india">Indian Law (ICA 1872, SEBI, DPDP 2023)</option>
-                      <option value="us">United States (Delaware, FTC, UCC)</option>
-                      <option value="uk_eu">UK & European Union (UCTA, GDPR)</option>
-                    </select>
+                    <p className="mt-1 text-[11px] leading-relaxed text-fp-muted">
+                      FP.ai surfaces potential clause issues. It does not yet apply jurisdiction-specific legal rules automatically.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -375,7 +366,7 @@ export default function AnalysisPage() {
 
               <div className="flex items-center justify-center gap-2 text-[11px] text-fp-muted">
                 <Info className="w-3 h-3" />
-                <span>Documents are parsed strictly in memory and never used for public model training.</span>
+                <span>Uploaded files are stored by the backend for analysis. They are not used for live model training; delete documents after review.</span>
               </div>
             </motion.div>
           )}
