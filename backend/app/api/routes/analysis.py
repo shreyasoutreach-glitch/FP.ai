@@ -71,13 +71,15 @@ async def _execute_analysis_pipeline(
 
     # Gemini analysis (or rule-based fallback)
     gemini_result = {}
-    if use_gemini:
+    if use_gemini and settings.GEMINI_API_KEY.strip():
         try:
             gemini_result = await analyze_with_gemini(
                 text, clause_analyses, contract_type, doc.original_name
             )
         except Exception as e:
             logger.warning(f"Gemini analysis skipped: {e}")
+    elif use_gemini:
+        logger.info("Gemini was requested but GEMINI_API_KEY is not configured; continuing without the optional LLM layer.")
 
     # Aggregate scores
     risk_counts = {"critical": 0, "high": 0, "medium": 0, "low": 0}
@@ -107,7 +109,15 @@ async def _execute_analysis_pipeline(
     )
     recommendations = gemini_result.get("recommendations", [])
     top_risks = gemini_result.get("top_risks", [])
-    power_imbalance = gemini_result.get("power_imbalance_score", 50)
+    # Keep this deterministic and grounded in the analyzed clauses; an LLM-generated
+    # scalar is not used as a substitute for a documented scoring rule.
+    aggregate = ml_engine.aggregate_document_analysis(
+        clause_analyses,
+        document_id=doc.id,
+        document_name=doc.original_name,
+        contract_type=contract_type,
+    )
+    power_imbalance = aggregate.power_imbalance_score
 
     # Populate top risks from ML if gemini did not provide them
     if not top_risks:
@@ -148,7 +158,8 @@ async def _execute_analysis_pipeline(
             "is_anomaly": c.is_anomaly,
             "readability_score": c.readability_score,
             "flags": c.flags,
-            "confidence": c.confidence,
+            "match_strength": c.match_strength,
+            "risk_score_breakdown": c.risk_score_breakdown,
         }
         for c in clause_analyses
     ]
