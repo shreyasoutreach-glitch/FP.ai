@@ -1,14 +1,13 @@
 """
-FP.ai ML Engine — World-Class Unsupervised Learning for Contract Clause Analysis
-Combines:
-  - Robust Vectorization: Sentence Transformers with high-dimensional TF-IDF + n-gram fallback
-  - HDBSCAN & KMeans Unsupervised Clause Clustering
-  - Unsupervised Cluster Topic & Keyword Extraction
-  - Isolation Forest Anomaly Detection with adaptive thresholding
-  - Multi-Index Legal Readability Analytics (Flesch Reading Ease, Flesch-Kincaid Grade, Coleman-Liau)
-  - Legal Knowledge-Base Pattern Matching (covering Disney+, Section 27, Section 74, DVT, SEBI SAST, etc.)
-  - Heuristic Risk Scoring & Power Imbalance Aggregation
-  - UMAP / PCA 2D Dimensionality Reduction for Visual Analytics
+FP.ai contract clause screening engine.
+
+Production dependencies provide word/character TF-IDF features and K-Means
+clustering, with document-relative Isolation Forest anomaly signals. Optional
+SentenceTransformer, HDBSCAN and UMAP imports are guarded by fallbacks; the
+deployed dependency set uses the portable TF-IDF/K-Means/PCA path.
+
+Legal phrase matching and risk scores are heuristic screening aids, not legal
+determinations or calibrated probabilities. No online model training occurs.
 """
 import re
 import json
@@ -43,7 +42,7 @@ class ClauseAnalysis:
     plain_english: str
     mitigation: str
     legal_basis: str
-    anomaly_score: float       # -1 (very anomalous) to +1 (normal)
+    anomaly_score: float       # Raw IsolationForest score_samples value; lower is more anomalous within this document
     cluster_id: int
     is_anomaly: bool
     readability_score: float   # Flesch Reading Ease (0–100, higher = easier)
@@ -654,7 +653,7 @@ class FPMLEngine:
                 mitigation = pattern.mitigation
                 legal_basis = pattern.legal_basis
                 matched_name = pattern.name
-                # Boost confidence when multiple red-flag phrases match
+                # Increase heuristic pattern-match strength when multiple red-flag phrases match
                 match_strength = max(match_strength, min(1.0, 0.6 + len(flags) * 0.1))
             else:
                 risk_level, category = self._heuristic_classify(clause_text, is_anomaly, fre, fk_grade)
