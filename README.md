@@ -9,7 +9,7 @@
 [![React 18](https://img.shields.io/badge/React-18.3-61dafb.svg?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-bd34fe.svg?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tests Passing](https://img.shields.io/badge/Tests-36%2F36%20Passing-16a34a.svg?style=flat-square)](https://github.com/shreyasoutreach-glitch/FP.ai)
+
 [![Repo](https://img.shields.io/badge/GitHub-shreyasoutreach--glitch%2FFP.ai-blue?style=flat-square&logo=github)](https://github.com/shreyasoutreach-glitch/FP.ai)
 
 <p align="center">
@@ -45,7 +45,7 @@ Every single day, software engineers, founders, freelancers, gig workers, and ev
 - When a startup agrees to an acquisition, the founders rarely catch the **Section 188 related-party indemnity** or the **hidden change-of-control poison pill** that wipes out their equity earn-out overnight.
 - When a consumer clicks *"I Agree"* on an entertainment app, they don't realize they just surrendered their constitutional right to a public jury trial if an affiliate company causes wrongful death in the physical world.
 
-**FP.ai exists to level the playing field.** It is an open-source, unsupervised machine learning and legal intelligence engine that reads every sentence the way a forensic attorney would. It calculates linguistic obscurity, clusters covenants into conceptual domains, scores power imbalance, and translates predatory legalese into razor-sharp, plain English you can act on.
+**FP.ai exists to level the playing field.** It is an open-source contract-screening system that extracts clauses, matches known risk patterns, uses statistical features to group and compare clauses, and produces plain-English review prompts. Its scores are heuristic triage signals, not probabilities of legal harm or legal opinions.
 
 ---
 
@@ -85,7 +85,7 @@ FP.ai's knowledge base is synthesized from the darkest moments in modern contrac
 
 ## ⚡ System Architecture
 
-FP.ai does not rely on fragile keyword lookups or naive LLM prompts alone. It utilizes a **multi-tiered, unsupervised ML pipeline** that learns and adapts from every document it reads:
+FP.ai combines structured phrase matching with document-level statistical analysis. The production configuration uses a portable TF-IDF feature path with K-Means clustering and Isolation Forest; uploaded documents do not update model weights:
 
 ```mermaid
 flowchart TD
@@ -113,6 +113,17 @@ flowchart TD
 ```
 
 ---
+
+## 🧰 Engineering Obstacles Overcome
+
+- **Unused model persistence removed:** the saved Isolation Forest artifact and implied online-learning behaviour were removed. The active anomaly detector is explicitly document-relative.
+- **Risk scoring made inspectable:** each clause result exposes base severity, anomaly adjustment, readability adjustment, matched-phrase adjustment and the resulting heuristic score.
+- **Match strength clarified:** phrase-match strength is represented as a heuristic signal, not a calibrated confidence probability.
+- **Upload validation tightened:** PDF and DOCX signatures are checked, reads are bounded by the upload limit, legacy `.doc` is no longer advertised, and extraction must succeed before a file is persisted.
+- **Annotation intake protected:** submitted examples are bounded and require a configured admin bearer key. The stored annotations are not described as live model training.
+- **Optional Gemini path made explicit:** synthesis is skipped when no backend API key is configured, and the system prompt directs the model not to invent legal authorities or make automatic enforceability conclusions.
+- **Power-imbalance fallback corrected:** the displayed estimate is derived from the analyzed clause set rather than a hard-coded neutral value.
+- **Evaluation tooling added:** a reproducible runner compares rule matching and hybrid screening against human-labelled JSONL data and reports precision, recall, F1 and a confusion matrix.
 
 ## 🎯 What FP.ai Delivers in Action
 
@@ -243,7 +254,7 @@ FP.ai/
 │   │   │   ├── documents.py            # PDF/DOCX/TXT secure file handling
 │   │   │   ├── health.py               # Microservice status & ML health
 │   │   │   ├── reports.py              # ReportLab PDF & JSON generators
-│   │   │   └── training.py             # Knowledge base & online training API
+│   │   │   └── training.py             # Knowledge base & protected annotation intake
 │   │   │
 │   │   ├── 📁 core/                    # Foundations & Statutes
 │   │   │   ├── config.py               # Environment settings
@@ -251,7 +262,7 @@ FP.ai/
 │   │   │   └── knowledge_base.py       # 29 Statutory & Historical Fine Print Patterns
 │   │   │
 │   │   ├── 📁 ml/                      # Unsupervised Machine Learning
-│   │   │   └── engine.py               # HDBSCAN, IsolationForest, UMAP & Readability
+│   │   │   └── engine.py               # TF-IDF, K-Means, Isolation Forest & Readability
 │   │   │
 │   │   ├── 📁 models/                  # Database Schema
 │   │   │   ├── analysis.py             # Analysis run persistence model
@@ -272,7 +283,7 @@ FP.ai/
 ├── 📁 frontend/                        # React 18 + TypeScript + Vite UI
 │   ├── index.html                      # HTML5 container with Inter & JetBrains Mono
 │   ├── package.json                    # Frontend package dependencies
-│   ├── tailwind.config.js              # Dark-mode cyberpunk/minimalist styling
+│   ├── tailwind.config.js              # Forest, sage and neutral visual system
 │   ├── vite.config.ts                  # Vite build tooling with backend proxy
 │   │
 │   └── 📁 src/
@@ -303,21 +314,24 @@ FP.ai/
     │   ├── saas_consumer_terms.txt
     │   └── test_results.json           # Verified ML test execution snapshot
     └── 📁 training/
-        └── examples.jsonl              # Annotated training corpus for ML fine-tuning
+        └── examples.jsonl              # Admin-submitted annotations for offline evaluation
 ```
 
 ---
 
-## 📊 Comprehensive Test Coverage
+## 📊 Reproducible Evaluation
 
-FP.ai includes **48 automated test assertions** verifying both rule-based statutory detection and unsupervised statistical learning:
+The repository includes an evaluation runner that compares the rule-match baseline with hybrid clause screening against independently human-labelled data.
 
-| Test Module | Coverage Scope | Status |
-|---|---|:---:|
-| `test_extractor.py` | PDF parsing, DOCX tables, non-standard text encodings (UTF-8, Latin-1), numbered sections (`1.1`, `(a)`, `Article I`), bullet points, empty document handling. | **17 / 17 Passed** ✅ |
-| `test_knowledge_base.py` | All 29 statutory patterns, category lookup integrity, Section 27 non-competes, Section 74 training bonds, Section 10 amendment rights, baseline score scaling. | **9 / 9 Passed** ✅ |
-| `test_api_endpoints.py` | Health probe, knowledge base API, training data submission, 1-click demo execution (`employment_toxic`, `saas_tos_unfair`), document upload, PDF generation, JSON export. | **10 / 10 Passed** ✅ |
-| `test_ml_engine.py` | Real-world M&A deal value threshold traps, SEBI open offer triggers, Enron SPE indemnities, WeWork covenants, Disney+ arbitration, DPDP Act liabilities. | **12 / 12 Passed** ✅ |
+From the `backend/` directory:
+
+```bash
+python -m evaluation.evaluate_classifier --input /path/to/labelled_clauses.jsonl
+```
+
+Each JSONL record must contain `document_id`, `clause_text` and a human-reviewed boolean `is_risky` label. Keep clauses from the same contract under the same document ID. The runner reports precision, recall, F1 and a confusion matrix for the supplied sample.
+
+The evaluator does not generate ground-truth labels or claim legal accuracy. Results are only as representative as the labelled dataset supplied by the evaluator.
 
 ---
 
