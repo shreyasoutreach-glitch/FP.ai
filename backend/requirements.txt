@@ -14,7 +14,8 @@ numpy==1.26.4
 pandas==2.2.3
 nltk==3.9.1
 spacy==3.8.2
-sentence-transformers==3.3.0
+# SentenceTransformers is intentionally excluded on constrained Render instances.
+# The ML engine automatically uses its TF-IDF + character n-gram fallback.
 hdbscan==0.8.40
 umap-learn==0.5.7
 faiss-cpu==1.9.0
