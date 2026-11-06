@@ -207,13 +207,13 @@ def _fallback_analysis(clauses: List[ClauseAnalysis], contract_type: str) -> Dic
 
     if critical:
         overall = "critical"
-        summary = f"⚠️ CRITICAL: This {contract_type} contains {len(critical)} critically dangerous clauses that require immediate legal review before signing."
+        summary = f"⚠️ CRITICAL: This {contract_type} contains {len(critical)} clauses heuristically flagged as critical and worth qualified legal review before signing."
     elif high:
         overall = "high"
-        summary = f"This {contract_type} contains {len(high)} high-risk clauses that could significantly disadvantage you."
+        summary = f"This {contract_type} contains {len(high)} clauses heuristically flagged as high risk and worth reviewing with qualified counsel."
     else:
         overall = "medium"
-        summary = f"This {contract_type} has been analyzed. Standard caution advised."
+        summary = f"This {contract_type} was screened using FP.ai's rules and statistical features. The output is a triage signal, not a legal opinion."
 
     top_risks = []
     for c in sorted(clauses, key=lambda x: x.risk_score, reverse=True)[:5]:
