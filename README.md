@@ -13,7 +13,7 @@
 [![Repo](https://img.shields.io/badge/GitHub-shreyasoutreach--glitch%2FFP.ai-blue?style=flat-square&logo=github)](https://github.com/shreyasoutreach-glitch/FP.ai)
 
 <p align="center">
-  <b>Unsupervised Machine Learning & Statutory Intelligence Engine designed to detect hidden vulnerabilities, predatory fine print, and asymmetric legal exposure before you sign.</b>
+  <b>Hybrid contract-screening system combining document processing, legal-pattern matching, statistical NLP and optional LLM-assisted explanations.</b>
 </p>
 
 [Mission & Philosophy](#-the-manifesto--why-fpai-exists) •
