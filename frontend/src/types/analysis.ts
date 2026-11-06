@@ -13,6 +13,8 @@ export interface Clause {
   is_anomaly: boolean
   readability_score: number
   flags: string[]
+  /** @deprecated Retained only for older precomputed demo fixtures. */
+  confidence?: number
   match_strength?: number
   risk_score_breakdown?: {
     base_score: number
