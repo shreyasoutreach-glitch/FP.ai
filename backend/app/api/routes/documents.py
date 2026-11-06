@@ -38,43 +38,64 @@ async def upload_document(
     file: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
 ):
-    """Upload a contract document for analysis."""
-    # Validate file size
-    content = await file.read()
-    if len(content) > settings.MAX_FILE_SIZE_BYTES:
-        raise HTTPException(413, f"File too large. Max size: {settings.MAX_FILE_SIZE_MB}MB")
-
-    # Validate file type
-    allowed = {".pdf", ".docx", ".doc", ".txt"}
-    ext = os.path.splitext(file.filename)[1].lower()
+    """Validate, extract, then persist an uploaded contract."""
+    original_name = (file.filename or "contract").replace("\\", "/").split("/")[-1][:255]
+    ext = os.path.splitext(original_name)[1].lower()
+    allowed = {".pdf", ".docx", ".txt"}
     if ext not in allowed:
-        raise HTTPException(415, f"Unsupported file type: {ext}. Allowed: {', '.join(allowed)}")
+        raise HTTPException(
+            415,
+            f"Unsupported file type: {ext or 'unknown'}. Supported formats: PDF, DOCX and TXT.",
+        )
 
-    # Save file
+    # Read in bounded chunks so the endpoint never performs an unbounded read.
+    chunks = []
+    total_bytes = 0
+    while True:
+        chunk = await file.read(1024 * 1024)
+        if not chunk:
+            break
+        total_bytes += len(chunk)
+        if total_bytes > settings.MAX_FILE_SIZE_BYTES:
+            raise HTTPException(413, f"File too large. Max size: {settings.MAX_FILE_SIZE_MB}MB")
+        chunks.append(chunk)
+
+    content = b"".join(chunks)
+    if not content:
+        raise HTTPException(400, "The uploaded file is empty.")
+
+    if ext == ".pdf" and not content.startswith(b"%PDF-"):
+        raise HTTPException(415, "The file extension is PDF but its contents are not a PDF document.")
+    if ext == ".docx" and not content.startswith(b"PK\\x03\\x04"):
+        raise HTTPException(415, "The file extension is DOCX but its contents are not a DOCX archive.")
+    if ext == ".txt" and b"\\x00" in content:
+        raise HTTPException(415, "The TXT file contains binary data and cannot be accepted as plain text.")
+
+    # Extract before saving so corrupt, encrypted or image-only PDFs are not retained as usable uploads.
+    try:
+        from app.services.extractor import extract_text_from_bytes
+        extracted_text, page_count = extract_text_from_bytes(content, original_name)
+    except Exception as e:
+        logger.info("Upload extraction rejected for %s: %s", original_name, e)
+        raise HTTPException(422, "Could not extract readable text. Check that the file is valid and that scanned PDFs have a text layer.")
+
+    if not extracted_text or not extracted_text.strip():
+        raise HTTPException(422, "No readable text was found in this document.")
+
+    word_count = len(extracted_text.split())
+    contract_type = detect_contract_type(extracted_text)
+
     doc_id = str(uuid.uuid4())
     safe_name = f"{doc_id}{ext}"
+    os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
     upload_path = os.path.join(settings.UPLOAD_DIR, safe_name)
     with open(upload_path, "wb") as f:
         f.write(content)
 
-    # Quick text extraction for metadata
-    try:
-        from app.services.extractor import extract_text_from_bytes
-        text, page_count = extract_text_from_bytes(content, file.filename)
-        word_count = len(text.split())
-        contract_type = detect_contract_type(text)
-    except Exception as e:
-        logger.warning(f"Metadata extraction failed: {e}")
-        text = ""
-        page_count = 1
-        word_count = 0
-        contract_type = "Unknown"
-
-    # Save to DB
     doc = Document(
         id=doc_id,
         filename=safe_name,
-        original_name=file.filename,
+        original_name=original_name,
         file_size=len(content),
         file_type=ext.lstrip("."),
         upload_path=upload_path,
@@ -99,7 +120,6 @@ async def upload_document(
         status=doc.status,
         created_at=doc.created_at.isoformat(),
     )
-
 
 @router.get("/", response_model=List[DocumentResponse])
 async def list_documents(db: AsyncSession = Depends(get_db)):
