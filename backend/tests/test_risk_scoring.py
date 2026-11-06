@@ -25,7 +25,7 @@ def test_risk_score_breakdown_is_transparent_and_bounded():
 def test_unmatched_clause_has_zero_pattern_match_strength():
     engine = FPMLEngine()
     pattern, flags, match_strength = engine._pattern_match(
-        "This clause describes a routine delivery timetable."
+        "Blue elephants enjoy quiet gardens beside the river."
     )
     assert pattern is None
     assert flags == []
