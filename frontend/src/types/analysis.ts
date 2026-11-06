@@ -13,7 +13,14 @@ export interface Clause {
   is_anomaly: boolean
   readability_score: number
   flags: string[]
-  confidence: number
+  match_strength?: number
+  risk_score_breakdown?: {
+    base_score: number
+    anomaly_boost: number
+    readability_penalty: number
+    red_flag_boost: number
+    total: number
+  }
 }
 
 export interface GeminiAnalysis {
