@@ -1,193 +1,244 @@
 import { motion } from 'framer-motion'
-import { Shield, Zap, Eye, Scale, ArrowRight, AlertTriangle, FileCode2, Sparkles, CheckCircle2 } from 'lucide-react'
+import {
+  AlertTriangle, ArrowRight, CheckCircle2, Eye, FileSearch,
+  FileText, Scale, ScanSearch, ShieldCheck
+} from 'lucide-react'
 import { Link } from 'react-router-dom'
 import DemoContractsSelector from '@/components/DemoContractsSelector'
 
 const stats = [
-  { label: 'Clause Patterns', value: '25+' },
-  { label: 'Legal Frameworks', value: '14' },
-  { label: 'Risk Categories', value: '18' },
-  { label: 'Detection Speed', value: '< 2.5s' },
+  { label: 'Clause patterns', value: '25+' },
+  { label: 'Legal frameworks', value: '14' },
+  { label: 'Risk categories', value: '18' },
+  { label: 'Typical scan', value: 'Seconds' },
 ]
 
 const features = [
   {
     icon: Eye,
-    title: 'Invisible Clause Detection',
-    desc: 'Surfaces the clauses designed to be overlooked — hidden in definitions, buried in schedules, and shrouded in dense legalese.'
+    title: 'The clause you might miss',
+    desc: 'Finds one-sided terms tucked into definitions, schedules and dense legal language, then brings the relevant wording into view.'
   },
   {
-    icon: Zap,
-    title: 'Unsupervised ML + Gemini Hybrid',
-    desc: 'Combines statistical anomaly modeling with Google Gemini reasoning to pinpoint unconscionable covenants without relying on brittle regex alone.'
+    icon: ScanSearch,
+    title: 'More than keyword matching',
+    desc: 'Statistical anomaly detection helps surface unusual clauses. Optional AI reasoning adds context where it is configured.'
   },
   {
     icon: Scale,
-    title: 'Indian & Global Statues Cross-Referenced',
-    desc: 'Audited against Indian Contract Act 1872, SEBI ICDR regulations, DPDP Act 2023, EU GDPR, US FTC rules, and landmark common-law rulings.'
+    title: 'Context that matters',
+    desc: 'Review potential issues against relevant Indian and international legal frameworks, with jurisdiction kept in view.'
   },
   {
-    icon: AlertTriangle,
-    title: 'Plain-English Explanations & Counter-Proposals',
-    desc: 'Every trap is translated into blunt, plain-English consequences and actionable renegotiation language you can paste directly into redlines.'
+    icon: FileSearch,
+    title: 'A useful next step',
+    desc: 'Understand why a clause matters and review suggested questions or alternative wording before taking it to a lawyer.'
   },
 ]
 
 const riskTypes = [
-  { label: 'Non-Compete Traps (§27 ICA)', color: 'text-red-400 border-red-800/50 bg-red-950/30' },
-  { label: 'Uncapped Consequential Damages', color: 'text-red-400 border-red-800/50 bg-red-950/30' },
-  { label: 'Asymmetric Termination', color: 'text-red-400 border-red-800/50 bg-red-950/30' },
-  { label: 'Arbitration Fee Frontloading', color: 'text-orange-400 border-orange-800/50 bg-orange-950/30' },
-  { label: 'Training Bonds & Clawbacks', color: 'text-orange-400 border-orange-800/50 bg-orange-950/30' },
-  { label: 'IP Personal Project Grabs', color: 'text-orange-400 border-orange-800/50 bg-orange-950/30' },
-  { label: 'AI Model Training On Private Data', color: 'text-red-400 border-red-800/50 bg-red-950/30' },
-  { label: 'Physical Certified Mail Auto-Renewals', color: 'text-yellow-400 border-yellow-800/50 bg-yellow-950/30' },
-  { label: 'Unilateral SLA Modifications', color: 'text-orange-400 border-orange-800/50 bg-orange-950/30' },
-  { label: 'Reverse Break-Up Omission (M&A)', color: 'text-red-400 border-red-800/50 bg-red-950/30' },
-  { label: 'Subjective MAE Walkaway Rights', color: 'text-orange-400 border-orange-800/50 bg-orange-950/30' },
-  { label: 'Remote Offshore Jurisdiction', color: 'text-yellow-400 border-yellow-800/50 bg-yellow-950/30' },
+  'Uncapped liability',
+  'One-sided termination',
+  'Non-compete restrictions',
+  'Automatic renewal',
+  'IP ownership clauses',
+  'Dispute resolution',
+  'Training cost clawbacks',
+  'Data-use permissions',
 ]
 
 export default function HomePage() {
   return (
-    <div className="space-y-16">
-      {/* Hero */}
-      <section className="text-center pt-8 pb-4 relative overflow-hidden">
-        {/* Ambient cyber glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-fp-accent/10 blur-[120px] rounded-full pointer-events-none -z-10" />
-
-        <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none select-none">
-          <Shield className="w-96 h-96 text-fp-accent" />
-        </div>
-
+    <div className="space-y-20 sm:space-y-24">
+      <section className="relative grid items-center gap-12 py-8 sm:py-14 lg:grid-cols-[0.92fr_1.08fr]">
+        <div className="pointer-events-none absolute -left-40 top-0 h-96 w-96 rounded-full bg-emerald-900/20 blur-3xl" />
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.55 }}
           className="relative z-10"
         >
-          <div className="inline-flex items-center gap-2 bg-fp-accent/15 border border-fp-accent/40 rounded-full px-4 py-1.5 text-xs text-fp-accent font-medium mb-6 shadow-[0_0_15px_rgba(37,99,235,0.2)]">
-            <span className="w-2 h-2 rounded-full bg-fp-accent animate-pulse" />
-            <span>Autonomous Fine Print Vulnerability Engine</span>
-            <span className="text-[10px] bg-fp-accent/30 text-white px-1.5 py-0.2 rounded font-mono">2026 Edition</span>
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-fp-border bg-fp-surface px-3 py-1.5 text-xs text-fp-muted">
+            <span className="h-1.5 w-1.5 rounded-full bg-fp-accent" />
+            Contract review, made clearer
           </div>
-
-          <h1 className="text-5xl sm:text-6xl font-black tracking-tight mb-6 leading-tight">
-            Read the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400">Fine Print</span>
-            <br />
-            before it signs your future away.
+          <h1 className="max-w-2xl text-5xl font-semibold leading-[1.08] tracking-[-0.045em] text-fp-text sm:text-6xl">
+            The important part is often in the <span className="text-fp-accent">fine print.</span>
           </h1>
-
-          <p className="text-fp-muted text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-            FP.ai dissects agreements for exploitative traps, asymmetric termination triggers,
-            unlawful non-competes, and indemnification landmines — in seconds.
+          <p className="mt-6 max-w-xl text-base leading-7 text-fp-muted sm:text-lg">
+            FP.ai helps you spot unusual, one-sided and potentially risky terms before you sign. Upload an agreement, see the clauses that deserve a closer look, and understand why they matter.
           </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link to="/analysis" className="btn-primary inline-flex items-center gap-2">
+              Review a contract <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link to="/knowledge" className="btn-ghost inline-flex items-center gap-2">
+              Explore the knowledge base
+            </Link>
+          </div>
+          <p className="mt-5 text-xs text-fp-muted">
+            PDF, DOCX and TXT · Informational review, not legal advice
+          </p>
+        </motion.div>
 
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Link to="/analysis" className="btn-primary flex items-center gap-2 text-sm shadow-[0_0_20px_rgba(37,99,235,0.35)]">
-              <Shield className="w-4 h-4" /> Analyse Any Contract <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link to="/knowledge" className="btn-ghost text-sm flex items-center gap-2">
-              <FileCode2 className="w-4 h-4 text-fp-accent" /> Knowledge Base & Simulator
-            </Link>
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.12 }}
+          className="relative"
+          aria-label="Illustration showing how FP.ai highlights a risky contract clause and explains it"
+        >
+          <div className="absolute -inset-5 rounded-[2rem] bg-emerald-900/20 blur-2xl" />
+          <div className="relative overflow-hidden rounded-2xl border border-fp-border bg-[#101713] p-4 shadow-2xl sm:p-6">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 text-fp-accent">
+                  <FileText className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-white">Service_Agreement.pdf</p>
+                  <p className="text-[11px] text-white/45">Illustrative contract excerpt</p>
+                </div>
+              </div>
+              <span className="rounded-full border border-emerald-800/70 bg-emerald-950/40 px-2.5 py-1 text-[10px] font-medium text-emerald-300">
+                Review preview
+              </span>
+            </div>
+
+            <div className="grid gap-4 pt-5 sm:grid-cols-[1.1fr_0.9fr]">
+              <div className="rounded-xl border border-white/10 bg-[#f5f4ef] p-4 text-[#343a34] shadow-inner">
+                <div className="mb-4 flex items-center justify-between border-b border-black/10 pb-2">
+                  <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#73796f]">Section 8 · Termination</span>
+                  <span className="text-[9px] text-[#8a9087]">Page 12</span>
+                </div>
+                <p className="text-[11px] leading-5 text-[#73796f]">
+                  8.1 Either party may terminate this Agreement by giving thirty (30) days’ written notice.
+                </p>
+                <div className="my-3 rounded-md border-l-[3px] border-[#a8bd9e] bg-[#e5ecdf] px-3 py-2.5">
+                  <p className="text-[11px] leading-5 text-[#344332]">
+                    8.2 The Company may, <span className="rounded-sm bg-[#c5d9b8] px-1 font-semibold text-[#263c2a]">at its sole discretion</span>, suspend the Services immediately without prior notice.
+                  </p>
+                  <div className="mt-2 flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wide text-[#58734f]">
+                    <ScanSearch className="h-3 w-3" /> Flagged for review
+                  </div>
+                </div>
+                <p className="text-[11px] leading-5 text-[#73796f]">
+                  8.3 Any outstanding fees shall remain payable following termination.
+                </p>
+                <div className="mt-5 flex items-center justify-between border-t border-black/10 pt-2 text-[9px] text-[#8a9087]">
+                  <span>Agreement excerpt</span><span>12 / 24</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <div className="rounded-xl border border-emerald-900/70 bg-[#17251b] p-4">
+                  <div className="mb-3 flex items-center gap-2 text-emerald-300">
+                    <AlertTriangle className="h-4 w-4" />
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Potential concern</span>
+                  </div>
+                  <p className="text-sm font-medium leading-5 text-white">Unilateral suspension right</p>
+                  <p className="mt-2 text-[11px] leading-5 text-white/60">
+                    The company can suspend service immediately, while the agreement does not show an equivalent right for you in this excerpt.
+                  </p>
+                  <div className="mt-4 border-t border-white/10 pt-3">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-white/40">Why it matters</p>
+                    <p className="mt-1 text-[11px] leading-5 text-white/75">
+                      You may lose access before having time to remedy a dispute or transition to another provider.
+                    </p>
+                  </div>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+                  <div className="flex items-center gap-2 text-fp-accent">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Suggested question</span>
+                  </div>
+                  <p className="mt-2 text-[11px] leading-5 text-white/70">
+                    Can suspension be limited to defined material breaches, with written notice and a reasonable cure period?
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3 text-[10px] text-white/40">
+              <span>Document → highlighted clause → plain-English context</span>
+              <span className="inline-flex items-center gap-1.5 text-emerald-300/80"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Example view</span>
+            </div>
           </div>
         </motion.div>
       </section>
 
-      {/* Stats bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {stats.map((s, i) => (
-          <motion.div
-            key={s.label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
-            className="card text-center border-fp-border/60 hover:border-fp-accent/40 transition-colors"
-          >
-            <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-              {s.value}
-            </div>
-            <div className="text-xs text-fp-muted font-medium mt-1">{s.label}</div>
-          </motion.div>
+      <section className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-fp-border bg-fp-border sm:grid-cols-4">
+        {stats.map((item) => (
+          <div key={item.label} className="bg-fp-card px-4 py-5 text-center sm:py-6">
+            <p className="text-2xl font-semibold tracking-tight text-fp-text sm:text-3xl">{item.value}</p>
+            <p className="mt-1 text-xs text-fp-muted">{item.label}</p>
+          </div>
         ))}
-      </div>
+      </section>
 
-      {/* Interactive Demo Contracts Shelf */}
-      <section className="relative">
-        <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-4 h-4 text-yellow-400" />
-          <span className="text-xs font-mono uppercase tracking-wider text-fp-accent font-semibold">Instant Interactive Demos</span>
+      <section className="space-y-5">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-fp-accent">Try it with an example</p>
+            <h2 className="text-2xl font-semibold tracking-tight text-fp-text sm:text-3xl">See what a closer read can uncover.</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-fp-muted">Explore a sample agreement and its preloaded analysis without uploading your own document.</p>
+          </div>
         </div>
         <DemoContractsSelector showTitle={true} />
       </section>
 
-      {/* Features */}
-      <section>
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2 text-fp-text">How FP.ai Defends You</h2>
-          <p className="text-sm text-fp-muted max-w-xl mx-auto">
-            Legal contracts are deliberately asymmetric. Our multi-agent neural pipeline levels the playing field.
-          </p>
+      <section className="space-y-8">
+        <div className="max-w-2xl">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-fp-accent">A clearer review process</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-fp-text sm:text-3xl">From dense language to decisions you can examine.</h2>
         </div>
-
-        <div className="grid sm:grid-cols-2 gap-5">
-          {features.map((f, i) => (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {features.map((feature, index) => (
             <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 16 }}
+              key={feature.title}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="card flex gap-4 hover:border-fp-accent/40 transition-all group"
+              transition={{ delay: index * 0.07 }}
+              className="card flex gap-4"
             >
-              <div className="w-11 h-11 rounded-xl bg-fp-accent/15 border border-fp-accent/30 flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-fp-accent/25 transition-all">
-                <f.icon className="w-5 h-5 text-fp-accent" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-fp-border bg-fp-surface text-fp-accent">
+                <feature.icon className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="font-semibold mb-1 text-fp-text group-hover:text-blue-300 transition-colors">{f.title}</h3>
-                <p className="text-sm text-fp-muted leading-relaxed">{f.desc}</p>
+                <h3 className="mb-1 text-sm font-semibold text-fp-text">{feature.title}</h3>
+                <p className="text-sm leading-6 text-fp-muted">{feature.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Risk Types Detected */}
-      <section className="card border-fp-border/60">
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-bold mb-1 text-fp-text">What We Uncover In Real Time</h2>
-          <p className="text-fp-muted text-xs">
-            Benchmarked against standard enterprise, high-growth startup, and consumer boilerplate.
-          </p>
+      <section className="card">
+        <div className="mb-5 max-w-xl">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-fp-accent">What to look for</p>
+          <h2 className="text-xl font-semibold text-fp-text">Terms worth a second look.</h2>
+          <p className="mt-2 text-sm leading-6 text-fp-muted">Examples of clause patterns the review experience is designed to help surface.</p>
         </div>
-        <div className="flex flex-wrap justify-center gap-2">
-          {riskTypes.map((r) => (
-            <span
-              key={r.label}
-              className={`rounded-full px-3 py-1 text-xs font-medium border transition-all hover:scale-105 ${r.color}`}
-            >
-              {r.label}
+        <div className="flex flex-wrap gap-2">
+          {riskTypes.map((item) => (
+            <span key={item} className="rounded-full border border-fp-border bg-fp-surface px-3 py-1.5 text-xs text-fp-muted">
+              {item}
             </span>
           ))}
         </div>
       </section>
 
-      {/* CTA Box */}
-      <section className="card text-center border-fp-accent/40 bg-gradient-to-b from-fp-card to-fp-surface relative overflow-hidden p-8 sm:p-10">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-fp-accent/10 rounded-full blur-3xl pointer-events-none" />
-        <Shield className="w-12 h-12 text-fp-accent mx-auto mb-4 animate-pulse-slow" />
-        <h2 className="text-2xl sm:text-3xl font-bold mb-2">Never sign another blind agreement.</h2>
-        <p className="text-fp-muted text-sm mb-6 max-w-lg mx-auto leading-relaxed">
-          Upload any contract in PDF, DOCX, or TXT format. FP.ai checks every line so you never surrender your rights in the fine print.
+      <section className="relative overflow-hidden rounded-2xl border border-fp-border bg-fp-card px-6 py-10 text-center sm:px-10">
+        <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-emerald-900/20 blur-3xl" />
+        <ShieldCheck className="relative mx-auto mb-4 h-9 w-9 text-fp-accent" />
+        <h2 className="relative text-2xl font-semibold tracking-tight text-fp-text sm:text-3xl">Know what you are agreeing to.</h2>
+        <p className="relative mx-auto mt-3 max-w-xl text-sm leading-6 text-fp-muted">
+          Give your next agreement a more careful read. FP.ai highlights issues to investigate; important decisions should still be reviewed with qualified legal counsel.
         </p>
-        <div className="flex items-center justify-center gap-3">
-          <Link to="/analysis" className="btn-primary inline-flex items-center gap-2 text-sm shadow-[0_0_25px_rgba(37,99,235,0.4)]">
-            <Zap className="w-4 h-4 text-yellow-300" /> Start Contract Analysis <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
+        <Link to="/analysis" className="btn-primary relative mt-6 inline-flex items-center gap-2">
+          Start a contract review <ArrowRight className="h-4 w-4" />
+        </Link>
       </section>
-
-      <div className="glow-line" />
     </div>
   )
 }
