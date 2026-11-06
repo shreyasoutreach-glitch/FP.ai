@@ -123,7 +123,8 @@ flowchart TD
 - **Evaluation tooling added:** a reproducible runner compares rule matching and hybrid screening against human-labelled JSONL data and reports precision, recall, F1 and a confusion matrix.
 - **Deletion now removes derived records:** deleting a source document also deletes its associated analysis rows, preventing orphaned clause findings and downloadable reports from remaining after document deletion.
 - **Unsupported bargaining-power claims removed:** the dashboard and PDF now show a flagged-clause pressure proxy and explain its inputs instead of asserting party advantage, fixed exit-right ratios, indemnity caps or dispute forums not extracted from the agreement.
-- **Backend regression checks automated:** a GitHub Actions workflow and pinned test-only dependencies are configured to run the pytest suite on backend pushes and pull requests.
+- **Backend regression checks automated:** a GitHub Actions workflow and pinned test-only dependencies run the backend suite on backend pushes and pull requests. The first run completed with **41 passed**.
+
 
 ## 🎯 What FP.ai Delivers in Action
 
