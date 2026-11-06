@@ -307,7 +307,7 @@ export default function ResultsPage() {
     if (!result) return
     const textToCopy = `FP.ai Analysis Summary for ${result.contract_type}
 Risk Rating: ${result.overall_risk_rating.toUpperCase()} (${result.overall_risk_score.toFixed(0)}/100)
-Heuristic Imbalance Signal: ${result.power_imbalance_score}/100
+Flagged-Clause Pressure: ${result.power_imbalance_score}/100
 
 Executive Summary:
 ${result.executive_summary}
@@ -526,7 +526,7 @@ ${result.recommendations.map((rec, i) => `• ${rec}`).join('\n')}`
                 >
                   {result.power_imbalance_score}
                 </div>
-                <div className="text-xs text-fp-muted mt-1 font-medium">Power Imbalance</div>
+                <div className="text-xs text-fp-muted mt-1 font-medium">Flagged-Clause Pressure</div>
               </div>
               <div className="text-[11px] text-fp-muted font-mono pt-2 border-t border-fp-border/50">
                 {result.power_imbalance_score > 70 ? 'Extreme Asymmetry' : 'Commercial Equilibrium'}
