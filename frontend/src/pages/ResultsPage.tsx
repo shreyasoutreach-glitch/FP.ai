@@ -196,7 +196,7 @@ function ClauseCard({
               <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-fp-border/40">
                 <div className="flex gap-4 text-xs text-fp-muted font-mono">
                   <span>Readability: <strong className="text-fp-text">{clause.readability_score?.toFixed(0) || 45}</strong></span>
-                  <span>Confidence: <strong className="text-fp-text">{((clause.confidence || 0.9) * 100).toFixed(0)}%</strong></span>
+                  <span>Pattern match: <strong className="text-fp-text">{clause.match_strength !== undefined ? clause.match_strength.toFixed(2) : "—"}</strong></span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -307,7 +307,7 @@ export default function ResultsPage() {
     if (!result) return
     const textToCopy = `FP.ai Analysis Summary for ${result.contract_type}
 Risk Rating: ${result.overall_risk_rating.toUpperCase()} (${result.overall_risk_score.toFixed(0)}/100)
-Power Imbalance: ${result.power_imbalance_score}/100
+Heuristic Imbalance Signal: ${result.power_imbalance_score}/100
 
 Executive Summary:
 ${result.executive_summary}
@@ -494,7 +494,7 @@ ${result.recommendations.map((rec, i) => `• ${rec}`).join('\n')}`
         <div className="space-y-6">
           {/* Top Key Metric Gauges */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <ScoreMeter score={result.overall_risk_score} label="Aggregate Risk Index" />
+            <ScoreMeter score={result.overall_risk_score} label="Heuristic Risk Index" />
             <div className="card text-center flex flex-col justify-between">
               <div>
                 <div className="text-3xl font-black font-mono" style={{ color: ratingColor }}>
@@ -533,6 +533,10 @@ ${result.recommendations.map((rec, i) => `• ${rec}`).join('\n')}`
               </div>
             </div>
           </div>
+
+          <p className="text-[11px] leading-relaxed text-fp-muted">
+            Risk and imbalance values are screening heuristics, not calibrated probabilities or legal determinations. Anomaly scores compare clauses within this document.
+          </p>
 
           {/* Visual Risk Distribution & Radar & Imbalance Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
