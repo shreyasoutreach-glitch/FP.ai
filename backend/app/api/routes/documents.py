@@ -88,10 +88,9 @@ async def upload_document(
 
     doc_id = str(uuid.uuid4())
     safe_name = f"{doc_id}{ext}"
-    os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
-    upload_path = os.path.join(settings.UPLOAD_DIR, safe_name)
-    with open(upload_path, "wb") as f:
-        f.write(content)
+    # Persist bytes in Neon with the document row. This survives Render restarts,
+    # unlike the service filesystem. Keep uploads bounded by MAX_FILE_SIZE_MB.
+    upload_path = ""
 
     doc = Document(
         id=doc_id,
@@ -100,6 +99,7 @@ async def upload_document(
         file_size=len(content),
         file_type=ext.lstrip("."),
         upload_path=upload_path,
+        file_data=content,
         word_count=word_count,
         page_count=page_count,
         contract_type=contract_type,
@@ -143,8 +143,7 @@ async def delete_document(doc_id: str, db: AsyncSession = Depends(get_db)):
     doc = result.scalar_one_or_none()
     if not doc:
         raise HTTPException(404, "Document not found")
-    if os.path.exists(doc.upload_path):
-        os.remove(doc.upload_path)
+    # The source payload is stored in the same durable row and is removed by DELETE.
     # Remove derived analyses as well; a deleted upload must not leave its
     # extracted clauses and reports available through the analysis endpoints.
     await db.execute(delete(Analysis).where(Analysis.document_id == doc_id))
