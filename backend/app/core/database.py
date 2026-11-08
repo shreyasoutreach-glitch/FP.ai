@@ -1,18 +1,38 @@
-"""Async SQLAlchemy database setup."""
+"""Async SQLAlchemy database setup for SQLite development and Neon PostgreSQL."""
 import os
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 from app.core.config import settings
 
-engine = create_async_engine(
-    settings.DATABASE_URL,
-    echo=settings.DEBUG,
-    connect_args={"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {},
-)
 
-AsyncSessionLocal = async_sessionmaker(
-    engine, class_=AsyncSession, expire_on_commit=False
-)
+def _database_engine_options(database_url: str) -> tuple[str, dict]:
+    """Normalize common PostgreSQL URLs for asyncpg and require TLS for hosted DBs."""
+    if database_url.startswith("postgres://"):
+        database_url = "postgresql://" + database_url[len("postgres://"):]
+    if database_url.startswith("postgresql://"):
+        parsed = urlsplit(database_url)
+        query = dict(parse_qsl(parsed.query, keep_blank_values=True))
+        query.pop("sslmode", None)
+        query.pop("channel_binding", None)
+        normalized = urlunsplit(("postgresql+asyncpg", parsed.netloc, parsed.path, urlencode(query), parsed.fragment))
+        return normalized, {
+            "connect_args": {"ssl": "require"},
+            "pool_pre_ping": True,
+            "pool_size": 3,
+            "max_overflow": 2,
+            "pool_recycle": 300,
+        }
+    return database_url, {
+        "connect_args": {"check_same_thread": False} if "sqlite" in database_url else {},
+    }
+
+
+_database_url, _engine_options = _database_engine_options(settings.DATABASE_URL)
+engine = create_async_engine(_database_url, echo=settings.DEBUG, **_engine_options)
+
+AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
 class Base(DeclarativeBase):
@@ -20,9 +40,9 @@ class Base(DeclarativeBase):
 
 
 async def init_db():
-    """Create all tables."""
-    if "sqlite" in settings.DATABASE_URL:
-        raw_path = settings.DATABASE_URL.replace("sqlite+aiosqlite:///", "").replace("sqlite:///", "")
+    """Initialize application tables; safe for an empty production Neon database."""
+    if "sqlite" in _database_url:
+        raw_path = _database_url.replace("sqlite+aiosqlite:///", "").replace("sqlite:///", "")
         dir_name = os.path.dirname(raw_path)
         if dir_name:
             os.makedirs(dir_name, exist_ok=True)
