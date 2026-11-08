@@ -242,12 +242,9 @@ async def load_demo_analysis(
             detail=f"Demo sample '{sample_id}' not found. Available samples: {', '.join(available)}",
         )
 
-    # Save demo file to uploads
-    os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+    # Demo source is stored durably in Neon, not on Render's ephemeral filesystem.
     filename = demo["filename"]
-    upload_path = os.path.join(settings.UPLOAD_DIR, filename)
-    with open(upload_path, "w", encoding="utf-8") as f:
-        f.write(demo["text"])
+    demo_bytes = demo["text"].encode("utf-8")
 
     # Create or update document record
     doc_id = f"demo-{demo['id']}"
@@ -261,7 +258,8 @@ async def load_demo_analysis(
             original_name=demo["title"],
             file_size=len(demo["text"].encode("utf-8")),
             file_type="txt",
-            upload_path=upload_path,
+            upload_path="",
+            file_data=demo_bytes,
             word_count=len(demo["text"].split()),
             page_count=max(1, len(demo["text"]) // 2500),
             contract_type=demo["contract_type"],
@@ -270,6 +268,10 @@ async def load_demo_analysis(
         db.add(doc)
         await db.commit()
         await db.refresh(doc)
+    elif doc.file_data is None:
+        # Backfill demo rows created before durable payload storage was enabled.
+        doc.file_data = demo_bytes
+        await db.commit()
 
     ml_engine = getattr(request.app.state, "ml_engine", None)
     if not ml_engine:
@@ -300,15 +302,20 @@ async def run_analysis(
     if not doc:
         raise HTTPException(404, "Document not found")
 
-    if not os.path.exists(doc.upload_path):
-        raise HTTPException(404, f"Uploaded file not found on disk at {doc.upload_path}")
-
     doc.status = "processing"
     await db.commit()
 
     try:
-        with open(doc.upload_path, "rb") as f:
-            content = f.read()
+        # Prefer durable database payloads. Fall back to legacy local files only
+        # for records created before durable payload storage was enabled.
+        if doc.file_data is not None:
+            content = bytes(doc.file_data)
+        elif doc.upload_path and os.path.isfile(doc.upload_path):
+            with open(doc.upload_path, "rb") as legacy_file:
+                content = legacy_file.read()
+        else:
+            raise HTTPException(404, "Stored document payload is unavailable. Please upload the contract again.")
+
         text, page_count = extract_text_from_bytes(content, doc.original_name)
 
         ml_engine = getattr(request.app.state, "ml_engine", None)
