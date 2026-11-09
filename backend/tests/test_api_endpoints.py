@@ -136,12 +136,22 @@ async def test_document_upload_analyze_and_reports_workflow(client: AsyncClient,
     doc_id = doc_data["id"]
     assert doc_id is not None
     assert doc_data["original_name"] == "test_freelance_nda.txt"
+    # Binary source content must stay server-side, never in API responses.
+    assert "file_data" not in doc_data
+    from sqlalchemy import select
+    from app.models.document import Document
+    from conftest import TestSessionLocal
+    async with TestSessionLocal() as session:
+        stored_doc = await session.scalar(select(Document).where(Document.id == doc_id))
+        assert stored_doc is not None
+        assert bytes(stored_doc.file_data) == sample_txt_bytes
 
     # 2. List documents
     list_resp = await client.get("/api/documents/")
     assert list_resp.status_code == 200
     docs = list_resp.json()
     assert any(d["id"] == doc_id for d in docs)
+    assert all("file_data" not in item for item in docs)
 
     # 3. Run analysis
     run_resp = await client.post("/api/analysis/run", json={"document_id": doc_id, "use_gemini": False})
@@ -185,6 +195,9 @@ async def test_document_upload_analyze_and_reports_workflow(client: AsyncClient,
 
     deleted_report = await client.get(f"/api/reports/{analysis_id}/json")
     assert deleted_report.status_code == 404
+    async with TestSessionLocal() as session:
+        deleted_doc = await session.scalar(select(Document).where(Document.id == doc_id))
+        assert deleted_doc is None
 
 
 @pytest.mark.asyncio
