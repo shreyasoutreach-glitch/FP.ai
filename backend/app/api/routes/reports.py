@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.core.database import get_db
+from app.api.routes.auth import require_auth
 from app.models.analysis import Analysis
 from app.models.document import Document
 from app.services.reports_service import generate_pdf_report
@@ -19,7 +20,7 @@ router = APIRouter()
 
 
 @router.get("/{analysis_id}/pdf")
-async def export_pdf(analysis_id: str, db: AsyncSession = Depends(get_db)):
+async def export_pdf(analysis_id: str, db: AsyncSession = Depends(get_db), _session=Depends(require_auth)):
     """Generate a clean, styled PDF vulnerability report."""
     a_result = await db.execute(select(Analysis).where(Analysis.id == analysis_id))
     analysis = a_result.scalar_one_or_none()
@@ -67,7 +68,7 @@ async def export_pdf(analysis_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/{analysis_id}/json")
-async def export_json(analysis_id: str, db: AsyncSession = Depends(get_db)):
+async def export_json(analysis_id: str, db: AsyncSession = Depends(get_db), _session=Depends(require_auth)):
     """Export full analysis as JSON."""
     result = await db.execute(select(Analysis).where(Analysis.id == analysis_id))
     analysis = result.scalar_one_or_none()
