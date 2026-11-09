@@ -58,6 +58,13 @@ async def prepare_database():
 
 
 @pytest_asyncio.fixture
+async def test_db_session() -> AsyncGenerator[AsyncSession, None]:
+    """Provide a direct test-session view for persistence assertions."""
+    async with TestSessionLocal() as session:
+        yield session
+
+
+@pytest_asyncio.fixture
 async def client() -> AsyncGenerator[AsyncClient, None]:
     """Async HTTP test client bound to FastAPI application."""
     transport = ASGITransport(app=app)
