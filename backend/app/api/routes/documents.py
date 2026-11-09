@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
 
 from app.core.config import settings
+from app.api.routes.auth import require_auth
 from app.core.database import get_db
 from app.models.document import Document
 from app.models.analysis import Analysis
@@ -38,6 +39,7 @@ async def upload_document(
     request: Request,
     file: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
+    _session=Depends(require_auth),
 ):
     """Validate, extract, then persist an uploaded contract."""
     original_name = (file.filename or "contract").replace("\\", "/").split("/")[-1][:255]
@@ -123,7 +125,7 @@ async def upload_document(
     )
 
 @router.get("/", response_model=List[DocumentResponse])
-async def list_documents(db: AsyncSession = Depends(get_db)):
+async def list_documents(db: AsyncSession = Depends(get_db), _session=Depends(require_auth)):
     result = await db.execute(select(Document).order_by(Document.created_at.desc()).limit(50))
     docs = result.scalars().all()
     return [
@@ -138,7 +140,7 @@ async def list_documents(db: AsyncSession = Depends(get_db)):
 
 
 @router.delete("/{doc_id}")
-async def delete_document(doc_id: str, db: AsyncSession = Depends(get_db)):
+async def delete_document(doc_id: str, db: AsyncSession = Depends(get_db), _session=Depends(require_auth)):
     result = await db.execute(select(Document).where(Document.id == doc_id))
     doc = result.scalar_one_or_none()
     if not doc:
