@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.core.config import settings
+from app.api.routes.auth import require_auth
 from app.core.database import get_db
 from app.models.document import Document
 from app.models.analysis import Analysis
@@ -294,6 +295,7 @@ async def run_analysis(
     req: AnalysisRequest,
     request: Request,
     db: AsyncSession = Depends(get_db),
+    _session=Depends(require_auth),
 ):
     """Run full ML + Gemini analysis on an uploaded document."""
     # Fetch document
@@ -347,7 +349,7 @@ async def run_analysis(
 
 
 @router.get("/{analysis_id}", response_model=AnalysisResponse)
-async def get_analysis(analysis_id: str, db: AsyncSession = Depends(get_db)):
+async def get_analysis(analysis_id: str, db: AsyncSession = Depends(get_db), _session=Depends(require_auth)):
     result = await db.execute(select(Analysis).where(Analysis.id == analysis_id))
     analysis = result.scalar_one_or_none()
     if not analysis:
@@ -377,14 +379,14 @@ async def get_analysis(analysis_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/explain-clause")
-async def explain_clause_endpoint(req: ClauseExplainRequest):
+async def explain_clause_endpoint(req: ClauseExplainRequest, _session=Depends(require_auth)):
     """Get plain-English AI explanation for any clause text."""
     result = await explain_clause(req.clause_text, req.context or "")
     return result
 
 
 @router.get("/document/{document_id}")
-async def get_analysis_by_document(document_id: str, db: AsyncSession = Depends(get_db)):
+async def get_analysis_by_document(document_id: str, db: AsyncSession = Depends(get_db), _session=Depends(require_auth)):
     result = await db.execute(
         select(Analysis).where(Analysis.document_id == document_id)
         .order_by(Analysis.created_at.desc())
