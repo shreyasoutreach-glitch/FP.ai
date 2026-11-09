@@ -16,6 +16,7 @@ if backend_path not in sys.path:
 
 from main import app
 from app.core.database import Base, get_db
+from app.api.routes.auth import require_auth
 from app.ml.engine import FPMLEngine
 
 # Use a test database
@@ -43,6 +44,7 @@ async def prepare_database():
 
     # Override the database dependency in FastAPI
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[require_auth] = lambda: {"exp": 4102444800}
 
     yield
 
