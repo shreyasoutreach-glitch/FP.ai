@@ -345,7 +345,7 @@ async def run_analysis(
         logger.error(f"Analysis failed: {e}", exc_info=True)
         doc.status = "error"
         await db.commit()
-        raise HTTPException(500, f"Analysis failed: {str(e)}")
+        raise HTTPException(500, "Analysis failed. Please retry or contact support.")
 
 
 @router.get("/{analysis_id}", response_model=AnalysisResponse)
