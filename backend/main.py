@@ -10,7 +10,6 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.core.database import init_db
@@ -85,8 +84,6 @@ app.include_router(reports.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(training.router, prefix="/api/training", tags=["Training"])
 
 # ── Static uploads ─────────────────────────────────────────────────────────────
-os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 
 
 if __name__ == "__main__":
