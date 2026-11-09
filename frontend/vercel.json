@@ -5,10 +5,6 @@
       "destination": "https://fp-ai-backend-live.onrender.com/api/:path*"
     },
     {
-      "source": "/uploads/:path*",
-      "destination": "https://fp-ai-backend-live.onrender.com/uploads/:path*"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
