@@ -27,7 +27,8 @@ async def test_login_sets_signed_http_only_session_cookie(client, monkeypatch):
 
     previous = app.dependency_overrides.pop(require_auth, None)
     try:
-        session_response = await client.get("/api/auth/session")
+        token = response.cookies.get("fpai_session")
+        session_response = await client.get("/api/auth/session", headers={"Cookie": f"fpai_session={token}"})
         assert session_response.status_code == 200
         assert session_response.json()["authenticated"] is True
     finally:
