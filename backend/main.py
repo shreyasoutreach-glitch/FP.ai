@@ -14,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.core.database import init_db
-from app.api.routes import analysis, documents, training, health, reports
+from app.api.routes import analysis, auth, documents, training, health, reports
 
 logging.basicConfig(
     level=logging.INFO if not settings.DEBUG else logging.DEBUG,
@@ -62,7 +62,7 @@ app.add_middleware(
     allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 
@@ -72,12 +72,13 @@ async def global_exception_handler(request: Request, exc: Exception):
     logger.error(f"Unhandled error processing {request.method} {request.url}: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content={"detail": f"Internal server error: {str(exc)}"},
+        content={"detail": "Internal server error"},
     )
 
 
 # ── Routes ─────────────────────────────────────────────────────────────────────
 app.include_router(health.router, prefix="/api", tags=["Health"])
+app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(documents.router, prefix="/api/documents", tags=["Documents"])
 app.include_router(analysis.router, prefix="/api/analysis", tags=["Analysis"])
 app.include_router(reports.router, prefix="/api/reports", tags=["Reports"])
