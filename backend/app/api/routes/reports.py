@@ -64,7 +64,7 @@ async def export_pdf(analysis_id: str, db: AsyncSession = Depends(get_db), _sess
         )
     except Exception as e:
         logger.error(f"PDF generation failed: {e}", exc_info=True)
-        raise HTTPException(500, f"PDF generation failed: {str(e)}")
+        raise HTTPException(500, "PDF generation failed. Please retry or contact support.")
 
 
 @router.get("/{analysis_id}/json")
