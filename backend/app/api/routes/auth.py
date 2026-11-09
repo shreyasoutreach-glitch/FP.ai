@@ -1,11 +1,15 @@
 """Single-workspace password gate with signed, short-lived browser sessions."""
-import base64, hashlib, hmac, json, secrets, time
+import base64, binascii, hashlib, hmac, json, secrets, time
+from collections import defaultdict, deque
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel
 from app.core.config import settings
 
 router = APIRouter()
 COOKIE_NAME = "fpai_session"
+_LOGIN_FAILURES = defaultdict(deque)
+_LOGIN_WINDOW_SECONDS = 900
+_LOGIN_MAX_FAILURES = 5
 
 class LoginRequest(BaseModel):
     password: str
@@ -27,7 +31,7 @@ def _decode_session(token: str):
             return None
         data = json.loads(payload)
         return data if int(data["exp"]) > int(time.time()) else None
-    except (ValueError, TypeError, KeyError, json.JSONDecodeError):
+    except (ValueError, TypeError, KeyError, json.JSONDecodeError, binascii.Error, UnicodeDecodeError):
         return None
 
 def _validate_origin(request: Request):
@@ -52,8 +56,17 @@ async def login(body: LoginRequest, request: Request, response: Response):
     if not settings.APP_ACCESS_PASSWORD or settings.SECRET_KEY == "change-me-in-production" or len(settings.SECRET_KEY) < 32:
         raise HTTPException(status_code=503, detail="Application security is not configured")
     _validate_origin(request)
+    client_ip = request.client.host if request.client else "unknown"
+    failures = _LOGIN_FAILURES[client_ip]
+    now = time.time()
+    while failures and now - failures[0] > _LOGIN_WINDOW_SECONDS:
+        failures.popleft()
+    if len(failures) >= _LOGIN_MAX_FAILURES:
+        raise HTTPException(status_code=429, detail="Too many failed attempts. Try again in 15 minutes.")
     if not hmac.compare_digest(body.password.encode(), settings.APP_ACCESS_PASSWORD.encode()):
+        failures.append(now)
         raise HTTPException(status_code=401, detail="Incorrect access password")
+    failures.clear()
     expires = int(time.time()) + settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
     payload = json.dumps({"exp": expires, "nonce": secrets.token_urlsafe(12)}, separators=(",", ":")).encode()
     token = _b64(payload) + "." + _sign(payload)
