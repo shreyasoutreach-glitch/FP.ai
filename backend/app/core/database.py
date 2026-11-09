@@ -1,5 +1,6 @@
 """Async SQLAlchemy database setup for SQLite development and Neon PostgreSQL."""
 import os
+from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
@@ -40,15 +41,27 @@ class Base(DeclarativeBase):
 
 
 async def init_db():
-    """Initialize application tables; safe for an empty production Neon database."""
+    """Apply versioned schema migrations before the API starts accepting traffic."""
     if "sqlite" in _database_url:
         raw_path = _database_url.replace("sqlite+aiosqlite:///", "").replace("sqlite:///", "")
         dir_name = os.path.dirname(raw_path)
         if dir_name:
             os.makedirs(dir_name, exist_ok=True)
+
+    from alembic import command
+    from alembic.config import Config
+
+    migration_config = Config(str(Path(__file__).resolve().parents[2] / "alembic.ini"))
     async with engine.begin() as conn:
-        from app.models import document, analysis  # noqa: F401
-        await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(
+            lambda sync_connection: _upgrade_schema(sync_connection, migration_config, command)
+        )
+
+
+def _upgrade_schema(sync_connection, migration_config, command):
+    """Run Alembic on the existing async connection without opening a second pool."""
+    migration_config.attributes["connection"] = sync_connection
+    command.upgrade(migration_config, "head")
 
 
 async def get_db():
