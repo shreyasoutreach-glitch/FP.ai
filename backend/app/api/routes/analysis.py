@@ -333,6 +333,12 @@ async def run_analysis(
             db=db,
         )
 
+    except HTTPException:
+        # Preserve deliberate API errors (for example, a missing legacy payload)
+        # instead of disguising them as an internal server error.
+        doc.status = "error"
+        await db.commit()
+        raise
     except Exception as e:
         logger.error(f"Analysis failed: {e}", exc_info=True)
         doc.status = "error"
