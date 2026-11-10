@@ -20,6 +20,7 @@ import RadarRiskChart from '@/components/RadarRiskChart'
 import PowerImbalanceVisualizer from '@/components/PowerImbalanceVisualizer'
 import AskAiModal from '@/components/AskAiModal'
 import ContractClauseViewer from '@/components/ContractClauseViewer'
+import DealRulebook from '@/components/DealRulebook'
 
 const riskColors: Record<string, string> = {
   critical: '#dc2626',
@@ -242,7 +243,7 @@ export default function ResultsPage() {
   const { id } = useParams<{ id: string }>()
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'overview' | 'clauses' | 'gemini'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'clauses' | 'gemini' | 'dealrules'>('dealrules')
   const [viewMode, setViewMode] = useState<'split' | 'cards'>('split')
   const [clauseFilter, setClauseFilter] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
@@ -471,7 +472,7 @@ ${result.recommendations.map((rec, i) => `• ${rec}`).join('\n')}`
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-fp-border/70 pb-px">
-        {(['overview', 'clauses', 'gemini'] as const).map((tab) => (
+        {(['overview', 'dealrules', 'clauses', 'gemini'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -482,7 +483,8 @@ ${result.recommendations.map((rec, i) => `• ${rec}`).join('\n')}`
                 : 'border-transparent text-fp-muted hover:text-fp-text'
             )}
           >
-            {tab === 'overview' && '📊 Executive Overview & Risk Visualizers'}
+            {tab === 'overview' && '📊 Overview'}
+            {tab === 'dealrules' && '🛡️ My Deal Rulebook'}
             {tab === 'clauses' && `📋 Contract Clause Viewer (${result.total_clauses})`}
             {tab === 'gemini' && '🤖 Gemini AI Legal Intelligence'}
           </button>
@@ -642,6 +644,10 @@ ${result.recommendations.map((rec, i) => `• ${rec}`).join('\n')}`
             </div>
           )}
         </div>
+      )}
+
+      {activeTab === 'dealrules' && (
+        <DealRulebook analysisId={result.analysis_id} contractType={result.contract_type} />
       )}
 
       {/* CLAUSES TAB: Split View / Cards + Multi-Filter & Full Text Search */}
