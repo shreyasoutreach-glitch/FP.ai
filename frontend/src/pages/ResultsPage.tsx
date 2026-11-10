@@ -21,6 +21,7 @@ import PowerImbalanceVisualizer from '@/components/PowerImbalanceVisualizer'
 import AskAiModal from '@/components/AskAiModal'
 import ContractClauseViewer from '@/components/ContractClauseViewer'
 import DealRulebook from '@/components/DealRulebook'
+import IntegrityAuditPanel from '@/components/IntegrityAuditPanel'
 
 const riskColors: Record<string, string> = {
   critical: '#dc2626',
@@ -243,7 +244,7 @@ export default function ResultsPage() {
   const { id } = useParams<{ id: string }>()
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'overview' | 'clauses' | 'gemini' | 'dealrules'>('dealrules')
+  const [activeTab, setActiveTab] = useState<'integrity' | 'overview' | 'clauses' | 'gemini' | 'dealrules'>('integrity')
   const [viewMode, setViewMode] = useState<'split' | 'cards'>('split')
   const [clauseFilter, setClauseFilter] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
@@ -472,7 +473,7 @@ ${result.recommendations.map((rec, i) => `• ${rec}`).join('\n')}`
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-fp-border/70 pb-px">
-        {(['overview', 'dealrules', 'clauses', 'gemini'] as const).map((tab) => (
+        {(['integrity', 'dealrules', 'overview', 'clauses', 'gemini'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -483,6 +484,7 @@ ${result.recommendations.map((rec, i) => `• ${rec}`).join('\n')}`
                 : 'border-transparent text-fp-muted hover:text-fp-text'
             )}
           >
+            {tab === 'integrity' && '🧾 Integrity Scan'}
             {tab === 'overview' && '📊 Overview'}
             {tab === 'dealrules' && '🛡️ My Deal Rulebook'}
             {tab === 'clauses' && `📋 Contract Clause Viewer (${result.total_clauses})`}
@@ -644,6 +646,10 @@ ${result.recommendations.map((rec, i) => `• ${rec}`).join('\n')}`
             </div>
           )}
         </div>
+      )}
+
+      {activeTab === 'integrity' && (
+        <IntegrityAuditPanel audit={result.integrity_audit} />
       )}
 
       {activeTab === 'dealrules' && (
