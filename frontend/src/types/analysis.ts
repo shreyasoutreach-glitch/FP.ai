@@ -43,6 +43,31 @@ export interface GeminiAnalysis {
   power_imbalance_score?: number
 }
 
+export interface IntegrityFinding {
+  id: string
+  kind: string
+  severity: string
+  title: string
+  explanation: string
+  next_step: string
+  excerpt: string
+  start_char: number
+  end_char: number
+}
+
+export interface IntegrityAudit {
+  version?: string
+  status?: string
+  summary?: {
+    findings_total?: number
+    review_items?: number
+    context_items?: number
+  }
+  findings?: IntegrityFinding[]
+  checks_run?: string[]
+  coverage_note?: string
+}
+
 export interface AnalysisResult {
   analysis_id: string
   document_id: string
@@ -70,4 +95,5 @@ export interface AnalysisResult {
   processing_time_ms: number
   status: string
   document_text?: string
+  integrity_audit?: IntegrityAudit
 }
