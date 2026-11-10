@@ -17,6 +17,7 @@ from app.models.analysis import Analysis
 from app.services.extractor import extract_text_from_bytes, segment_into_clauses, detect_contract_type
 from app.services.gemini_service import analyze_with_gemini, explain_clause
 from app.services.demo_data import get_demo_contract, list_demo_contracts
+from app.services.integrity_audit import audit_document_integrity
 
 logger = logging.getLogger("fpai.analysis")
 router = APIRouter()
@@ -52,6 +53,7 @@ class AnalysisResponse(BaseModel):
     top_risks: list
     processing_time_ms: int
     status: str
+    integrity_audit: dict
 
 
 async def _execute_analysis_pipeline(
@@ -81,6 +83,11 @@ async def _execute_analysis_pipeline(
             logger.warning(f"Gemini analysis skipped: {e}")
     elif use_gemini:
         logger.info("Gemini was requested but GEMINI_API_KEY is not configured; continuing without the optional LLM layer.")
+
+    # Deterministic structural integrity scan. Store this inside the existing JSON
+    # field to avoid a schema migration and keep historic analysis rows compatible.
+    integrity_audit = audit_document_integrity(text)
+    gemini_payload = {**gemini_result, "integrity_audit": integrity_audit}
 
     # Aggregate scores
     risk_counts = {"critical": 0, "high": 0, "medium": 0, "low": 0}
@@ -179,7 +186,7 @@ async def _execute_analysis_pipeline(
         power_imbalance_score=int(power_imbalance),
         executive_summary=executive_summary,
         clauses_json=clauses_serialized,
-        gemini_analysis=gemini_result,
+        gemini_analysis=gemini_payload,
         recommendations=recommendations,
         top_risks=top_risks,
         status="completed",
@@ -209,11 +216,12 @@ async def _execute_analysis_pipeline(
         power_imbalance_score=int(power_imbalance),
         executive_summary=executive_summary,
         clauses=clauses_serialized,
-        gemini_analysis=gemini_result,
+        gemini_analysis=gemini_payload,
         recommendations=recommendations,
         top_risks=top_risks,
         processing_time_ms=processing_ms,
         status="completed",
+        integrity_audit=integrity_audit,
     )
 
 
@@ -371,6 +379,7 @@ async def get_analysis(analysis_id: str, db: AsyncSession = Depends(get_db), _se
         executive_summary=analysis.executive_summary,
         clauses=analysis.clauses_json or [],
         gemini_analysis=analysis.gemini_analysis or {},
+        integrity_audit=(analysis.gemini_analysis or {}).get("integrity_audit", {}),
         recommendations=analysis.recommendations or [],
         top_risks=analysis.top_risks or [],
         processing_time_ms=analysis.processing_time_ms,
