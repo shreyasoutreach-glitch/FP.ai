@@ -18,7 +18,7 @@ _NUMBER_WORDS = {
 }
 
 _PLACEHOLDER = re.compile(
-    r"\[(?:\s*(?:●+|x{2,}|_+|insert\b|to be completed\b|tbd\b|tbc\b|name\b|date\b|amount\b|address\b|●)\s*)\]"
+    r"\[(?:\s*(?:●+|x{2,}|_+|insert[^]]{0,40}|to be completed\b|tbd\b|tbc\b|name\b|date\b|amount\b|address\b|●)\s*)\]"
     r"|<\s*(?:insert|name|date|amount|address|company|party)[^>]*>"
     r"|\b(?:TBD|TBC|TODO|TO BE COMPLETED|INSERT (?:NAME|DATE|AMOUNT|ADDRESS|DETAILS) HERE)\b"
     r"|_{3,}",
@@ -46,7 +46,7 @@ _NUMERIC_WORD_MISMATCH = re.compile(
     re.IGNORECASE,
 )
 _EXTERNAL_DEPENDENCY = re.compile(
-    r"\b(?:incorporated by reference|subject to (?:the )?(?:company'?s? )?(?:standard )?(?:online )?(?:terms|policies|privacy policy)|"
+    r"\b(?:incorporat(?:ed|es) by reference|subject to (?:the )?(?:company'?s? )?(?:standard )?(?:online )?(?:terms|policies|privacy policy)|"
     r"as set forth in (?:the )?(?:online )?(?:terms|policy)|available at https?://|"
     r"published at https?://|as amended from time to time at)\b",
     re.IGNORECASE,
