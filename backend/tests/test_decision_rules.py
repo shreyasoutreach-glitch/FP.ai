@@ -47,3 +47,59 @@ def test_personal_rulebook_requires_known_priority_ids():
         assert "Unsupported priority" in str(exc)
     else:
         raise AssertionError("Unknown priorities must be rejected.")
+
+
+@pytest.mark.asyncio
+async def test_authenticated_decision_check_endpoint_returns_clause_evidence(
+    client, test_db_session
+):
+    from app.models.analysis import Analysis
+
+    analysis = Analysis(
+        document_id="rulebook-test-document",
+        contract_type="Employment Contract",
+        clauses_json=[
+            {
+                "category": "penalty",
+                "risk_level": "critical",
+                "text": "Employee must repay training cost of INR 250000 if they resign before 24 months.",
+                "start_char": 10,
+                "end_char": 120,
+            }
+        ],
+        status="completed",
+    )
+    test_db_session.add(analysis)
+    await test_db_session.commit()
+    await test_db_session.refresh(analysis)
+
+    response = await client.post(
+        f"/api/analysis/{analysis.id}/decision-check",
+        json={"priority_ids": ["exit_flexibility"]},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["checks"][0]["status"] == "potential_conflict"
+    assert payload["checks"][0]["evidence"][0]["start_char"] == 10
+
+
+@pytest.mark.asyncio
+async def test_decision_check_endpoint_rejects_unknown_priority(client, test_db_session):
+    from app.models.analysis import Analysis
+
+    analysis = Analysis(
+        document_id="rulebook-test-document-unknown",
+        contract_type="General Contract",
+        clauses_json=[],
+        status="completed",
+    )
+    test_db_session.add(analysis)
+    await test_db_session.commit()
+
+    response = await client.post(
+        f"/api/analysis/{analysis.id}/decision-check",
+        json={"priority_ids": ["not_a_real_priority"]},
+    )
+
+    assert response.status_code == 422
