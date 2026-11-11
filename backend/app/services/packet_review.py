@@ -16,7 +16,7 @@ _SMALL_NUMBERS = {
     "nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40,
     "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90,
 }
-_NUMBER = r"(?:\d{1,3}|" + "|".join(_SMALL_NUMBERS) + r")"
+_NUMBER = r"(?:\d{1,3}|" + "|".join(_SMALL_NUMBERS) + r")(?:\s*\(\s*\d{1,3}\s*\))?"
 
 PATTERNS: dict[str, tuple[str, re.Pattern[str]]] = {
     "notice_period_days": ("Notice period", re.compile(rf"\b(?:at least\s+|not less than\s+|minimum of\s+)?({_NUMBER})\s*(?:calendar\s+|business\s+)?days?\s*(?:['’]?\s*)?(?:prior\s+)?(?:written\s+)?notice\b", re.I)),
@@ -30,7 +30,7 @@ PATTERNS: dict[str, tuple[str, re.Pattern[str]]] = {
 
 
 def _normalize_number(raw: str) -> int:
-    value = raw.strip().casefold()
+    value = raw.strip().casefold().split("(", 1)[0].strip()
     return int(value) if value.isdigit() else _SMALL_NUMBERS[value]
 
 
