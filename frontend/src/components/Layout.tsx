@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from 'react-router-dom'
-import { Shield, BookOpen, Upload, Home } from 'lucide-react'
+import { Shield, BookOpen, Upload, Home, GitCompareArrows } from 'lucide-react'
 
 export default function Layout() {
   const navCls = ({ isActive }: { isActive: boolean }) =>
@@ -30,6 +30,10 @@ export default function Layout() {
             <NavLink to="/analysis" className={navCls}>
               <Upload className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Analyse</span>
+            </NavLink>
+            <NavLink to="/packet-review" className={navCls}>
+              <GitCompareArrows className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Packet Review</span>
             </NavLink>
             <NavLink to="/knowledge" className={navCls}>
               <BookOpen className="h-3.5 w-3.5" />
