@@ -8,6 +8,16 @@ from collections import defaultdict
 from typing import Any
 
 
+_SMALL_NUMBERS = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+    "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+    "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14,
+    "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18,
+    "nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40,
+    "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90,
+}
+_NUMBER = r"(?:\d{1,3}|" + "|".join(_SMALL_NUMBERS) + r")"
+
 PATTERNS: dict[str, tuple[str, re.Pattern[str]]] = {
     "notice_period_days": (
         "Notice period",
@@ -40,16 +50,23 @@ PATTERNS: dict[str, tuple[str, re.Pattern[str]]] = {
 }
 
 
+def _normalize_number(raw: str) -> int:
+    value = raw.strip().casefold()
+    return int(value) if value.isdigit() else _SMALL_NUMBERS[value]
+
+
 def _normalize(key: str, raw: str) -> str:
     value = " ".join(raw.strip().casefold().split())
     if key == "term_months":
         match = re.match(r"(\d+)\s*(month|year)", value)
         if match:
-            return str(int(match.group(1)) * (12 if match.group(2).startswith("year") else 1))
+            return str(_normalize_number(match.group(1)) * (12 if match.group(2).startswith("year") else 1))
     if key in {"confidentiality_survival_years", "non_compete_years"}:
         match = re.match(r"(\d+)\s*(year|month)", value)
         if match:
             return str(int(match.group(1)) * (12 if match.group(2).startswith("year") else 1))
+    if key in {"notice_period_days", "payment_due_days"}:
+        return str(_normalize_number(value))
     return value.rstrip(" .,")
 
 
