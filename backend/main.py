@@ -13,7 +13,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 
 from app.core.config import settings
 from app.core.database import init_db
-from app.api.routes import analysis, auth, documents, training, health, reports, decision_checks
+from app.api.routes import analysis, auth, documents, training, health, reports, decision_checks, packet_review
 
 logging.basicConfig(
     level=logging.INFO if not settings.DEBUG else logging.DEBUG,
@@ -80,6 +80,7 @@ app.include_router(health.router, prefix="/api", tags=["Health"])
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(documents.router, prefix="/api/documents", tags=["Documents"])
 app.include_router(analysis.router, prefix="/api/analysis", tags=["Analysis"])
+app.include_router(packet_review.router, prefix="/api/packet-review", tags=["Contract Packet Review"])
 app.include_router(decision_checks.router, prefix="/api/analysis", tags=["Personal Deal Rulebook"])
 app.include_router(reports.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(training.router, prefix="/api/training", tags=["Training"])

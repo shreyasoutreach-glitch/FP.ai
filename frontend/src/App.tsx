@@ -6,6 +6,7 @@ import HomePage from '@/pages/HomePage'
 import AnalysisPage from '@/pages/AnalysisPage'
 import ResultsPage from '@/pages/ResultsPage'
 import KnowledgePage from '@/pages/KnowledgePage'
+import PacketReviewPage from '@/pages/PacketReviewPage'
 import { api } from '@/utils/api'
 
 function AccessGate({ children }: { children: ReactNode }) {
@@ -59,6 +60,7 @@ export default function App() {
           <Route path="/analysis" element={<AnalysisPage />} />
           <Route path="/results/:id" element={<ResultsPage />} />
           <Route path="/knowledge" element={<KnowledgePage />} />
+          <Route path="/packet-review" element={<PacketReviewPage />} />
         </Route>
       </Routes>
     </AccessGate>
