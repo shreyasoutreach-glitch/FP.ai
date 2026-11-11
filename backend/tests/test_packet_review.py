@@ -110,24 +110,32 @@ async def test_packet_review_api_compares_saved_documents_and_returns_source_evi
 @pytest.mark.asyncio
 async def test_packet_review_api_requires_completed_analysis(client, test_db_session):
     from app.models.document import Document
+    from app.models.analysis import Analysis
 
-    doc = Document(
-        id="packet-unanalysed",
-        filename="packet-unanalysed.txt",
-        original_name="Unanalysed document",
-        file_size=5,
-        file_type="txt",
-        file_data=b"hello",
-        word_count=1,
-        page_count=1,
+    for doc_id, name in [("packet-ready", "Ready document"), ("packet-unanalysed", "Unanalysed document")]:
+        test_db_session.add(Document(
+            id=doc_id,
+            filename=f"{doc_id}.txt",
+            original_name=name,
+            file_size=5,
+            file_type="txt",
+            file_data=b"hello",
+            word_count=1,
+            page_count=1,
+            contract_type="Unknown",
+            status="uploaded",
+        ))
+    test_db_session.add(Analysis(
+        document_id="packet-ready",
         contract_type="Unknown",
-        status="uploaded",
-    )
-    test_db_session.add(doc)
+        clauses_json=[],
+        status="completed",
+    ))
     await test_db_session.commit()
 
     response = await client.post(
         "/api/packet-review/compare",
-        json={"document_ids": ["packet-unanalysed", "packet-unanalysed-2"]},
+        json={"document_ids": ["packet-ready", "packet-unanalysed"]},
     )
-    assert response.status_code == 404
+    assert response.status_code == 409
+    assert "Unanalysed document" in response.json()["detail"]["documents_to_analyse"]
