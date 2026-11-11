@@ -19,34 +19,13 @@ _SMALL_NUMBERS = {
 _NUMBER = r"(?:\d{1,3}|" + "|".join(_SMALL_NUMBERS) + r")"
 
 PATTERNS: dict[str, tuple[str, re.Pattern[str]]] = {
-    "notice_period_days": (
-        "Notice period",
-        re.compile(r"\b(?:at least\s+|not less than\s+|minimum of\s+)?(\d{1,3})\s*(?:calendar\s+|business\s+)?days?\s*(?:['’]?\s*)?(?:prior\s+)?(?:written\s+)?notice\b", re.I),
-    ),
-    "payment_due_days": (
-        "Payment deadline",
-        re.compile(r"\b(?:within|no later than|not later than)\s+(\d{1,3})\s*days?\s+(?:of|after|from)\s+(?:receipt|submission|delivery|invoice|acceptance)\b", re.I),
-    ),
-    "term_months": (
-        "Agreement term",
-        re.compile(r"\b(?:initial\s+)?(?:term|period)\s+(?:of\s+)?(\d{1,2})\s*(months?|years?)\b", re.I),
-    ),
-    "confidentiality_survival_years": (
-        "Confidentiality survival",
-        re.compile(r"\b(?:confidentiality|confidential obligations?|obligations of confidentiality)\b.{0,100}?\b(?:survive|continues? for|remain in force for|for a period of)\s+(\d{1,2})\s*(years?)\b", re.I),
-    ),
-    "non_compete_years": (
-        "Restrictive covenant duration",
-        re.compile(r"\b(?:non[- ]compete|not compete|competing business|restraint of trade)\b.{0,140}?\b(\d{1,2})\s*(years?|months?)\b", re.I),
-    ),
-    "arbitration_seat": (
-        "Arbitration seat",
-        re.compile(r"\b(?:seat|place) of arbitration\s*(?:shall be|is|:)?\s*([A-Z][A-Za-z .'-]{1,60}?)(?:[.;,\n]|$)", re.I),
-    ),
-    "governing_law": (
-        "Governing law",
-        re.compile(r"\b(?:governed by|governing law(?: shall be)?|laws of)\s+(?:the\s+)?(?:State of\s+)?([A-Z][A-Za-z .'-]{1,60}?)(?:\s+(?:without regard|excluding conflict)|[.;,\n]|$)", re.I),
-    ),
+    "notice_period_days": ("Notice period", re.compile(rf"\b(?:at least\s+|not less than\s+|minimum of\s+)?({_NUMBER})\s*(?:calendar\s+|business\s+)?days?\s*(?:['’]?\s*)?(?:prior\s+)?(?:written\s+)?notice\b", re.I)),
+    "payment_due_days": ("Payment deadline", re.compile(rf"\b(?:within|no later than|not later than)\s+({_NUMBER})\s*days?\s+(?:of|after|from)\s+(?:receipt|submission|delivery|invoice|acceptance)\b", re.I)),
+    "term_months": ("Agreement term", re.compile(rf"\b(?:initial\s+)?(?:term|period)\s+(?:of\s+)?({_NUMBER})\s*(months?|years?)\b", re.I)),
+    "confidentiality_survival_years": ("Confidentiality survival", re.compile(rf"\b(?:confidentiality|confidential obligations?|obligations of confidentiality)\b.{{0,100}}?\b(?:survive|continues? for|remain in force for|for a period of)\s+({_NUMBER})\s*(years?)\b", re.I)),
+    "non_compete_years": ("Restrictive covenant duration", re.compile(rf"\b(?:non[- ]compete|not compete|competing business|restraint of trade)\b.{{0,140}}?\b({_NUMBER})\s*(years?|months?)\b", re.I)),
+    "arbitration_seat": ("Arbitration seat", re.compile(r"\b(?:seat|place) of arbitration\s*(?:shall be|is|:)?\s*([A-Z][A-Za-z .'-]{1,60}?)(?:[.;,\n]|$)", re.I)),
+    "governing_law": ("Governing law", re.compile(r"\b(?:governed by|governing law(?: shall be)?|laws of)\s+(?:the\s+)?(?:State of\s+)?([A-Z][A-Za-z .'-]{1,60}?)(?:\s+(?:without regard|excluding conflict)|[.;,\n]|$)", re.I)),
 }
 
 
@@ -58,17 +37,16 @@ def _normalize_number(raw: str) -> int:
 def _normalize(key: str, raw: str) -> str:
     value = " ".join(raw.strip().casefold().split())
     if key == "term_months":
-        match = re.match(r"(\d+)\s*(month|year)", value)
+        match = re.match(r"(.+?)\s*(month|year)", value)
         if match:
             return str(_normalize_number(match.group(1)) * (12 if match.group(2).startswith("year") else 1))
     if key in {"confidentiality_survival_years", "non_compete_years"}:
-        match = re.match(r"(\d+)\s*(year|month)", value)
+        match = re.match(r"(.+?)\s*(year|month)", value)
         if match:
-            return str(int(match.group(1)) * (12 if match.group(2).startswith("year") else 1))
+            return str(_normalize_number(match.group(1)) * (12 if match.group(2).startswith("year") else 1))
     if key in {"notice_period_days", "payment_due_days"}:
         return str(_normalize_number(value))
     return value.rstrip(" .,")
-
 
 def extract_explicit_terms(document_id: str, document_name: str, text: str) -> list[dict[str, Any]]:
     facts: list[dict[str, Any]] = []
